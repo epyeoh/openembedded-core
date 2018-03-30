@@ -1,7 +1,7 @@
-From 501543b3ef715488a142e3d301ff2733aa33eec7 Mon Sep 17 00:00:00 2001
+From 0adf1dea52007cdfb72520c87485c7cb0af9cd1f Mon Sep 17 00:00:00 2001
 From: Awais Belal <awais_belal@mentor.com>
 Date: Wed, 25 Oct 2017 21:00:05 +0500
-Subject: [PATCH] dhcp: correct the intention for xml2 lib search
+Subject: [PATCH 11/11] dhcp: correct the intention for xml2 lib search
 
 A missing case breaks the build when libxml2 is
 required and found appropriately. The third argument
@@ -20,10 +20,10 @@ Signed-off-by: Awais Belal <awais_belal@mentor.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index bfe988a..f0459e6 100644
+index 97fc39c..42de9e7 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -608,7 +608,7 @@ AC_ARG_WITH(libxml2,
+@@ -639,7 +639,7 @@ AC_ARG_WITH(libxml2,
  	with_libxml2="$withval", with_libxml2="no")
  
  if test x$with_libxml2 != xno; then
@@ -33,5 +33,5 @@ index bfe988a..f0459e6 100644
  			AC_MSG_FAILURE([*** Cannot find xmlTextWriterStartElement with -lxml2 and libxml2 was requested])
  		fi])
 -- 
-2.11.1
+1.8.3.1
 

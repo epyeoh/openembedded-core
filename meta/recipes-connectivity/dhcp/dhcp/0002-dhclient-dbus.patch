@@ -1,4 +1,4 @@
-From be7540d31c356e80ee02e90e8bf162b7ac6e5ba5 Mon Sep 17 00:00:00 2001
+From 4514f02e4bbd33d9136ed4522f508d64c7ec9249 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Tue, 15 Aug 2017 14:56:56 +0800
 Subject: [PATCH 02/11] dhclient dbus
@@ -33,7 +33,7 @@ index d69d0d8..095b143 100755
  }
  
 diff --git a/client/scripts/freebsd b/client/scripts/freebsd
-index 8f3e2a2..ad7fb44 100755
+index 7c073f8..b3426bf 100755
 --- a/client/scripts/freebsd
 +++ b/client/scripts/freebsd
 @@ -89,6 +89,11 @@ exit_with_hooks() {
@@ -49,7 +49,7 @@ index 8f3e2a2..ad7fb44 100755
  }
  
 diff --git a/client/scripts/linux b/client/scripts/linux
-index 5fb1612..3d447b6 100755
+index 0c42969..cded38f 100755
 --- a/client/scripts/linux
 +++ b/client/scripts/linux
 @@ -174,6 +174,11 @@ exit_with_hooks() {
@@ -65,7 +65,7 @@ index 5fb1612..3d447b6 100755
  }
  
 diff --git a/client/scripts/netbsd b/client/scripts/netbsd
-index 07383b7..aaba8e8 100755
+index fa08637..3628418 100755
 --- a/client/scripts/netbsd
 +++ b/client/scripts/netbsd
 @@ -45,6 +45,11 @@ exit_with_hooks() {
@@ -81,7 +81,7 @@ index 07383b7..aaba8e8 100755
  }
  
 diff --git a/client/scripts/openbsd b/client/scripts/openbsd
-index e7f4746..56b980c 100644
+index afb7924..57c80d4 100755
 --- a/client/scripts/openbsd
 +++ b/client/scripts/openbsd
 @@ -45,6 +45,11 @@ exit_with_hooks() {

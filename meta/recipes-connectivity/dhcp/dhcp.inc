@@ -7,8 +7,8 @@ easier to administer devices."
 
 HOMEPAGE = "http://www.isc.org/"
 
-LICENSE = "ISC"
-LIC_FILES_CHKSUM = "file://LICENSE;beginline=4;md5=c5c64d696107f84b56fe337d14da1753"
+LICENSE = "MPL-2.0"
+LIC_FILES_CHKSUM = "file://LICENSE;beginline=4;md5=004a4db50a1e20972e924a8618747c01"
 
 DEPENDS = "openssl bind"
 

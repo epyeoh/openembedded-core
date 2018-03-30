@@ -1,6 +1,6 @@
-From 7107511fd209f08f9a96f8938041ae48f3295895 Mon Sep 17 00:00:00 2001
-From: Christopher Larson <chris_larson@mentor.com>
-Date: Tue, 15 Aug 2017 16:17:49 +0800
+From a2646c0a27de8dc1d386368b48fe7d0d2042491b Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Thu, 29 Mar 2018 10:45:13 +0800
 Subject: [PATCH 07/11] Add configure argument to make the libxml2 dependency
  explicit and determinisitic.
 
@@ -8,7 +8,7 @@ Upstream-Status: Pending
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
-Rebase to 4.3.6
+Rebase to 4.4.4
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
@@ -16,12 +16,12 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 11 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index 44fb57e..8e9f509 100644
+index 552631a..ea9f40f 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -611,6 +611,17 @@ AC_CHECK_FUNCS(strlcat)
- # For HP/UX we need -lipv6 for if_nametoindex, perhaps others.
- AC_SEARCH_LIBS(if_nametoindex, [ipv6])
+@@ -642,6 +642,17 @@ if test "$have_nanosleep" = "rt"; then
+ 	LIBS="-lrt $LIBS"
+ fi
  
 +AC_ARG_WITH(libxml2,
 +	AS_HELP_STRING([--with-libxml2], [link against libxml2. this is needed if bind was built with xml2 support enabled]),

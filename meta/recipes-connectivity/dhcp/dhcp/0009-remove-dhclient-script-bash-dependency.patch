@@ -1,4 +1,4 @@
-From f3f8b7726e50e24ef3edf5fa5a17e31d39118d7e Mon Sep 17 00:00:00 2001
+From 538c7b61d1ecebbbcd7526fc6aecd8b0b830a24a Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Tue, 15 Aug 2017 15:49:31 +0800
 Subject: [PATCH 09/11] remove dhclient-script bash dependency
@@ -14,7 +14,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/client/scripts/linux b/client/scripts/linux
-index 3122a75..1712d7d 100755
+index 516c986..e9ea379 100755
 --- a/client/scripts/linux
 +++ b/client/scripts/linux
 @@ -1,4 +1,4 @@
