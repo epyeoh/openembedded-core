@@ -1,0 +1,42 @@
+#!/usr/bin/python3
+#
+# Helper script for creating test result & log data then push it to git
+#
+import os
+import sys
+
+scripts_path = os.path.dirname(os.path.realpath(__file__))
+lib_path = scripts_path + '/lib'
+sys.path = sys.path + [lib_path]
+#from testresultlog.testmatrixcreator import TestEnvMatrixCreator
+from testresultlog.testplancreator import TestPlanCreator
+from testresultlog.testplangitwriter import TestPlanGitWriter
+
+def main():
+    poky_top_dir = os.path.abspath('..')
+    print(poky_top_dir)
+    oeqa_dir = os.path.join(poky_top_dir, 'meta/lib/oeqa')
+    print(oeqa_dir)
+    testcase_dir = os.path.join(oeqa_dir, 'runtime/cases')
+    print(testcase_dir)
+
+    component_conf = os.path.join(scripts_path, 'lib/testresultlog/conf/testplan_component.conf')
+    environment_conf = os.path.join(scripts_path, 'lib/testresultlog/conf/testplan_component_environment.conf')
+
+    testplan_creator = TestPlanCreator()
+    test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix('runtime', component_conf, environment_conf)
+    print('DEGUG: test_env_matrix:')
+    print(test_env_matrix)
+    test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(testcase_dir)
+    print('DEGUG: test_moduleclass_function_dict:')
+    print(test_moduleclass_function_dict)
+
+    test_module_moduleclass_dict = testplan_creator.get_test_module_test_moduleclass_dictionary(test_moduleclass_function_dict)
+    print('DEGUG: test_module_moduleclass_dict:')
+    print(test_module_moduleclass_dict)
+
+    testplan_git_writer = TestPlanGitWriter()
+    testplan_git_writer.write_testplan_to_storage(scripts_path, test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict)
+
+if __name__ == "__main__":
+    sys.exit(main())
