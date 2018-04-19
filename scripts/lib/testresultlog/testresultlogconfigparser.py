@@ -8,6 +8,9 @@ class TestResultLogConfigParser(object):
         self.parser.optionxform = str
         self.parser.read(config)
 
+    def get_testopia_config(self, section, option):
+        return self.parser.get(section, option)
+
     def get_config_items(self, section):
         items = []
         if self.parser.has_section(section):

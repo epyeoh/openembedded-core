@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+from testresultlog.testresultlogconfigparser import TestResultLogConfigParser
 
 scripts_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = scripts_path + '/lib'
@@ -8,7 +9,6 @@ sys.path = sys.path + [lib_path]
 import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
-from testresultlog.testresultlogconfigparser import TestResultLogConfigParser
 
 class TestPlanCreator(object):
 
@@ -94,5 +94,3 @@ class TestPlanCreator(object):
             else:
                 test_module_moduleclass_dict[module_name] = [class_name]
         return test_module_moduleclass_dict
-
-

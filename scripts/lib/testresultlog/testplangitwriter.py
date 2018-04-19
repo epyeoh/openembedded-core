@@ -1,8 +1,7 @@
-from testresultlog.testmatrixjsonencoder import TestEnvMatrixJsonEncoder
 import subprocess
 import os
-scripts_path = os.path.dirname(os.path.realpath(__file__))
 import json
+import pathlib
 
 class TestPlanGitWriter(object):
 
@@ -39,20 +38,33 @@ class TestPlanGitWriter(object):
         with open(file_path, 'a') as the_file:
             the_file.write(file_content)
 
-    def _push_testsuite_testcase_json_file_to_git_repo(self, file_dir, git_repo):
-        return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo])
+    def _push_testsuite_testcase_json_file_to_git_repo(self, file_dir, git_repo, git_branch):
+        return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo, "-b", git_branch])
 
-    def write_testplan_to_storage(self, top_workspace_dir, test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict):
-        file_write_dir = os.path.join(top_workspace_dir, 'test-results-new')
+    def _create_file_directory_list_for_environment_matrix(self, target_dir, test_env_matrix):
+        directory_list = []
+        for env_str in test_env_matrix:
+            env_list = env_str.split(',')
+            path = target_dir
+            for env in env_list:
+                path = os.path.join(path, env)
+            directory_list.append(path)
+        return directory_list
+
+    def write_testplan_to_storage(self, test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, workspace_dir, folder_name, git_repo_dir, git_branch):
+        project_dir = os.path.join(workspace_dir, folder_name)
+        environment_dir_list = self._create_file_directory_list_for_environment_matrix(project_dir, test_env_matrix)
+        print('DEBUG: environment_dir_list: %s' % environment_dir_list)
+        for env_dir in environment_dir_list:
+            pathlib.Path(env_dir).mkdir(parents=True, exist_ok=True)
         print('DEBUG: print generated module json structure')
         for module_key in sorted(list(test_module_moduleclass_dict.keys())):
             module_json_structure = self._generate_testsuite_testcase_json_data_structure(test_module_moduleclass_dict[module_key], test_moduleclass_function_dict)
             print('DEBUG: print generated module json structure for %s' % module_key)
             print(module_json_structure)
             file_name = 'testresult_%s.json' % module_key
-            #path_to_write_file = os.path.join(scripts_path, 'test-results')
-            file_path = os.path.join(file_write_dir, file_name)
-            print('DEBUG: path to write file: %s' % file_path)
-            self._write_testsuite_testcase_json_data_structure_to_file(file_path, module_json_structure)
-        git_repo_dir = os.path.join(top_workspace_dir, 'test-results-new-repo')
-        self._push_testsuite_testcase_json_file_to_git_repo(file_write_dir, git_repo_dir)
+            for env_dir in environment_dir_list:
+                file_path = os.path.join(env_dir, file_name)
+                print('DEBUG: path to write file: %s' % file_path)
+                self._write_testsuite_testcase_json_data_structure_to_file(file_path, module_json_structure)
+        self._push_testsuite_testcase_json_file_to_git_repo(workspace_dir, git_repo_dir, git_branch)
