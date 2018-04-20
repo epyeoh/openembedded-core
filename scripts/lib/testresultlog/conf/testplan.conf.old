@@ -1,0 +1,14 @@
+[TestPlanCreation]
+oeqa_testcase_dir = /home/yeoh/tmp/poky_qa/meta/lib/oeqa/runtime/cases
+testplan_component = runtime
+work_dir = /home/yeoh/tmp/poky_qa/scripts/test-results/test-result-dir
+git_dir = /home/yeoh/tmp/poky_qa/scripts/test-results/test-result-git-dir
+testplan_cycle = qa_2.5_m3_rc1
+
+[TestResultUpdate]
+#result_log_dir = /home/yeoh/tmp/result_log/log.do_testimage.26804
+result_log_dir = C:\test_result_log\test_log\log.do_testimage.26804
+#work_dir = /home/yeoh/tmp/poky_qa/test-results/test-result-git-dir/runtime/runtime_os_core-image-lsb-sdk/runtime_dut_minnow-turbot
+work_dir = C:\test_result_log\test-result-dir\runtime\runtime_os_core-image-lsb-sdk\runtime_dut_minnow-turbot
+git_dir = /home/yeoh/tmp/poky_qa/scripts/test-results/test-result-git-dir
+testplan_cycle = qa_2.5_m1_rc1

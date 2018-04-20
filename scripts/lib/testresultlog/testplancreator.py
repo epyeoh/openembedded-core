@@ -1,11 +1,7 @@
 import os
-import sys
 import unittest
 from testresultlog.testresultlogconfigparser import TestResultLogConfigParser
-
-scripts_path = os.path.dirname(os.path.realpath(__file__))
-lib_path = scripts_path + '/lib'
-sys.path = sys.path + [lib_path]
+from testresultlog.testplangitwriter import TestPlanGitWriter
 import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
@@ -94,3 +90,40 @@ class TestPlanCreator(object):
             else:
                 test_module_moduleclass_dict[module_name] = [class_name]
         return test_module_moduleclass_dict
+
+def main():
+    scripts_path = os.path.dirname(os.path.realpath(__file__))
+    testplan_conf = os.path.join(scripts_path, 'conf/testplan.conf')
+    component_conf = os.path.join(scripts_path, 'conf/testplan_component.conf')
+    environment_conf = os.path.join(scripts_path, 'conf/testplan_component_environment.conf')
+
+    configparser = TestResultLogConfigParser(testplan_conf)
+    testplan_component = configparser.get_testopia_config('TestPlanCreation', 'testplan_component')
+    testcase_dir = configparser.get_testopia_config('TestPlanCreation', 'oeqa_testcase_dir')
+    print('DEBUG: testcase_dir: %s' % testcase_dir)
+    work_dir = configparser.get_testopia_config('TestPlanCreation', 'work_dir')
+    print('DEBUG: work_dir: %s' % work_dir)
+    git_dir = configparser.get_testopia_config('TestPlanCreation', 'git_dir')
+    print('DEBUG: git_dir: %s' % git_dir)
+    testplan_cycle = configparser.get_testopia_config('TestPlanCreation', 'testplan_cycle')
+    print('DEBUG: testplan_cycle: %s' % testplan_cycle)
+
+    testplan_creator = TestPlanCreator()
+    test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(testplan_component, component_conf, environment_conf)
+    print('DEGUG: test_env_matrix:')
+    print(test_env_matrix)
+    test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(testcase_dir)
+    print('DEGUG: test_moduleclass_function_dict:')
+    print(test_moduleclass_function_dict)
+    test_module_moduleclass_dict = testplan_creator.get_test_module_test_moduleclass_dictionary(test_moduleclass_function_dict)
+    print('DEGUG: test_module_moduleclass_dict:')
+    print(test_module_moduleclass_dict)
+
+    testplan_git_writer = TestPlanGitWriter()
+    testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, work_dir, testplan_component, git_dir, testplan_cycle)
+
+def register_commands(subparsers):
+    """Register subcommands from this plugin"""
+    parser_build = subparsers.add_parser('create', help='Create testplan and test result template',
+                                         description='Create the file structure representing testplan environments and its test result templates')
+    parser_build.set_defaults(func=main)

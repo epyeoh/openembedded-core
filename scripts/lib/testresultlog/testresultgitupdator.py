@@ -1,8 +1,24 @@
 import os
 import json
 import subprocess
+import scriptpath
+scriptpath.add_bitbake_lib_path()
+scriptpath.add_oe_lib_path()
+from oeqa.utils.git import GitRepo, GitError
+from testresultlog.testresultlogconfigparser import TestResultLogConfigParser
+from testresultlog.testlogparser import TestLogParser
 
 class TestResultGitUpdator(object):
+
+    def _checkout_git_repo_for_update(self, git_dir, git_branch):
+        try:
+            repo = GitRepo(git_dir, is_topdir=True)
+        except GitError:
+            print("Non-empty directory that is not a Git repository "
+                   "at {}\nPlease specify an existing Git repository, "
+                   "an empty directory or a non-existing directory "
+                   "path.".format(git_dir))
+        repo.run_cmd('checkout %s' % git_branch)
 
     def _get_test_module_name_from_test_function(self, test_function):
         test_module_name = test_function[0:test_function.find(".")]
@@ -44,6 +60,7 @@ class TestResultGitUpdator(object):
         return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo, "-b", git_branch])
 
     def update_test_result(self, work_dir, test_function_status_dict, git_dir, git_branch):
+        self._checkout_git_repo_for_update(git_dir, git_branch)
         testmodule_testfunction_dict = self._get_testmodule_testfunction_dictionary(test_function_status_dict)
         test_module_list = testmodule_testfunction_dict.keys()
         for test_module in test_module_list:
@@ -60,5 +77,24 @@ class TestResultGitUpdator(object):
                 print('Cannot find file (%s)' % test_module_file)
         self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
 
+def main():
+    scripts_path = os.path.dirname(os.path.realpath(__file__))
+    testplan_conf = os.path.join(scripts_path, 'conf/testplan.conf')
 
+    configparser = TestResultLogConfigParser(testplan_conf)
+    result_log_dir = configparser.get_testopia_config('TestResultUpdate', 'result_log_dir')
+    work_dir = configparser.get_testopia_config('TestResultUpdate', 'work_dir')
+    git_dir = configparser.get_testopia_config('TestResultUpdate', 'git_dir')
+    testplan_cycle = configparser.get_testopia_config('TestResultUpdate', 'testplan_cycle')
 
+    testlogparser = TestLogParser()
+    test_function_status_dict = testlogparser.get_test_status(result_log_dir)
+    print('DEGUG: test_function_status_dict: %s' % test_function_status_dict)
+    testresultupdator = TestResultGitUpdator()
+    testresultupdator.update_test_result(work_dir, test_function_status_dict, git_dir, testplan_cycle)
+
+def register_commands(subparsers):
+    """Register subcommands from this plugin"""
+    parser_build = subparsers.add_parser('update', help='Update test result status into the specified test result template',
+                                         description='Update test result status from the test log into the specified test result template')
+    parser_build.set_defaults(func=main)
