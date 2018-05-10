@@ -2,6 +2,7 @@ import subprocess
 import os
 import json
 import pathlib
+import tempfile
 
 class TestPlanGitWriter(object):
 
@@ -71,7 +72,21 @@ class TestPlanGitWriter(object):
             directory_list.append(path)
         return directory_list
 
-    def write_testplan_to_storage(self, test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, workspace_dir, folder_name, git_repo_dir, git_branch):
+    def _create_temporary_workspace_dir(self):
+        return tempfile.mkdtemp(prefix='testresultlog')
+
+    def _get_git_repo_dir(self, script_path, git_repo_dir):
+        if git_repo_dir == 'default':
+            script_path = os.path.join(script_path, '..')
+            git_repo_dir = os.path.join(script_path, 'test-result-log-git')
+        return git_repo_dir
+
+    def _remove_temporary_workspace_dir(self, workspace_dir):
+        pass
+
+    def write_testplan_to_storage(self, test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, folder_name, script_path, git_repo_dir, git_branch):
+        workspace_dir = self._create_temporary_workspace_dir()
+        print('workspace_dir: %s' % workspace_dir)
         project_dir = os.path.join(workspace_dir, folder_name)
         environment_dir_list = self._create_file_directory_list_for_environment_matrix(project_dir, test_env_matrix)
         if len(environment_dir_list) == 0:
@@ -88,4 +103,6 @@ class TestPlanGitWriter(object):
                 file_path = os.path.join(env_dir, file_name)
                 print('DEBUG: path to write file: %s' % file_path)
                 self._write_testsuite_testcase_json_data_structure_to_file(file_path, module_json_structure)
+        git_repo_dir = self._get_git_repo_dir(script_path, git_repo_dir)
         self._push_testsuite_testcase_json_file_to_git_repo(workspace_dir, git_repo_dir, git_branch)
+        self._remove_temporary_workspace_dir(workspace_dir)

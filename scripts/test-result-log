@@ -6,8 +6,8 @@
 import os
 import sys
 import argparse
-scripts_path = os.path.dirname(os.path.realpath(__file__))
-lib_path = scripts_path + '/lib'
+script_path = os.path.dirname(os.path.realpath(__file__))
+lib_path = script_path + '/lib'
 sys.path = sys.path + [lib_path]
 import testresultlog.testplancreator
 import testresultlog.testresultgitupdator
@@ -18,7 +18,8 @@ def main():
     testresultlog.testplancreator.register_commands(subparser)
     testresultlog.testresultgitupdator.register_commands(subparser)
     args = parser.parse_args()
-    args.func()
+    args.script_path = script_path
+    args.func(args)
 
 if __name__ == "__main__":
     sys.exit(main())

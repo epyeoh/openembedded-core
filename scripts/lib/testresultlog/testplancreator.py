@@ -51,6 +51,19 @@ class TestPlanCreator(object):
         config_parser = TestResultLogConfigParser(conf_path)
         return config_parser.get_config_items(section)
 
+    def _get_oeqa_source_dir(self, script_path, source):
+        print('script_path: %s' % script_path)
+        script_path = os.path.join(script_path, '..')
+        if source == 'runtime':
+            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/runtime/cases')
+        elif source == 'selftest':
+            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/selftest/cases')
+        elif source == 'sdk':
+            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/sdk/cases')
+        else:
+            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/sdkext/cases')
+        return oeqa_dir
+
     def _get_test_module_and_test_function_list(self, test_dir):
         loader = unittest.TestLoader()
         test_suite = loader.discover(start_dir=test_dir, pattern='*.py')
@@ -67,7 +80,9 @@ class TestPlanCreator(object):
                 env_matrix = self._multiply_current_env_matrix_with_new_env_list(env_matrix, env_value_list, env)
         return env_matrix
 
-    def get_test_moduleclass_test_function_dictionary(self, test_dir):
+    def get_test_moduleclass_test_function_dictionary(self, script_path, source):
+        test_dir = self._get_oeqa_source_dir(script_path, source)
+        print('test_dir: %s' % test_dir)
         test_module_function_list = self._get_test_module_and_test_function_list(test_dir)
         test_moduleclass_func_dict = {}
         for test in test_module_function_list:
@@ -91,28 +106,30 @@ class TestPlanCreator(object):
                 test_module_moduleclass_dict[module_name] = [class_name]
         return test_module_moduleclass_dict
 
-def main():
+def main(args):
     scripts_path = os.path.dirname(os.path.realpath(__file__))
     testplan_conf = os.path.join(scripts_path, 'conf/testplan.conf')
     component_conf = os.path.join(scripts_path, 'conf/testplan_component.conf')
     environment_conf = os.path.join(scripts_path, 'conf/testplan_component_environment.conf')
 
     configparser = TestResultLogConfigParser(testplan_conf)
-    testplan_component = configparser.get_testopia_config('TestPlanCreation', 'testplan_component')
-    testcase_dir = configparser.get_testopia_config('TestPlanCreation', 'oeqa_testcase_dir')
-    print('DEBUG: testcase_dir: %s' % testcase_dir)
-    work_dir = configparser.get_testopia_config('TestPlanCreation', 'work_dir')
-    print('DEBUG: work_dir: %s' % work_dir)
-    git_dir = configparser.get_testopia_config('TestPlanCreation', 'git_dir')
-    print('DEBUG: git_dir: %s' % git_dir)
-    testplan_cycle = configparser.get_testopia_config('TestPlanCreation', 'testplan_cycle')
-    print('DEBUG: testplan_cycle: %s' % testplan_cycle)
+    #testplan_component = configparser.get_testopia_config('TestPlanCreation', 'testplan_component')
+    #testcase_dir = configparser.get_testopia_config('TestPlanCreation', 'oeqa_testcase_dir')
+    #print('DEBUG: testcase_dir: %s' % testcase_dir)
+    #work_dir = configparser.get_testopia_config('TestPlanCreation', 'work_dir')
+    #print('DEBUG: work_dir: %s' % work_dir)
+    #git_dir = configparser.get_testopia_config('TestPlanCreation', 'git_dir')
+    #print('DEBUG: git_dir: %s' % git_dir)
+    #testplan_cycle = configparser.get_testopia_config('TestPlanCreation', 'testplan_cycle')
+    #print('DEBUG: testplan_cycle: %s' % testplan_cycle)
 
     testplan_creator = TestPlanCreator()
-    test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(testplan_component, component_conf, environment_conf)
+    #test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(testplan_component, component_conf, environment_conf)
+    test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(args.component, component_conf, environment_conf)
     print('DEGUG: test_env_matrix:')
     print(test_env_matrix)
-    test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(testcase_dir)
+    #test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(testcase_dir)
+    test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(args.script_path, args.source)
     print('DEGUG: test_moduleclass_function_dict:')
     print(test_moduleclass_function_dict)
     test_module_moduleclass_dict = testplan_creator.get_test_module_test_moduleclass_dictionary(test_moduleclass_function_dict)
@@ -120,10 +137,23 @@ def main():
     print(test_module_moduleclass_dict)
 
     testplan_git_writer = TestPlanGitWriter()
-    testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, work_dir, testplan_component, git_dir, testplan_cycle)
+    #testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, work_dir, testplan_component, git_dir, testplan_cycle)
+    testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, args.component, args.script_path, args.gitrepo, args.gitbranch)
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
     parser_build = subparsers.add_parser('create', help='Create testplan and test result template',
                                          description='Create the file structure representing testplan environments and its test result templates')
     parser_build.set_defaults(func=main)
+    SOURCE = ('runtime', 'selftest', 'sdk', 'sdkext')
+    parser_build.add_argument('-s', '--source', required=True, choices=SOURCE,
+    help='Testcase source to be selected from the list (runtime, selftest, sdk or sdkext). '
+         '"runtime" will search testcase available in poky/meta/lib/oeqa/runtime/cases. '
+         '"selftest" will search testcase available in poky/meta/lib/oeqa/selftest/cases. '
+         '"sdk" will search testcase available in poky/meta/lib/oeqa/sdk/cases. '
+         '"sdkext" will search testcase available in poky/meta/lib/oeqa/sdkext/cases. ')
+    parser_build.add_argument('-c', '--component', required=True, help='Component to be selected from conf/testplan_component.conf for creation of test environments')
+    parser_build.add_argument('-b', '--gitbranch', required=True, help='Git branch to be created for the git repository')
+    parser_build.add_argument('-g', '--gitrepo', required=False, default='default', help='Git repository to be created (optional, default will be /poky/test-result-log-git')
+
+

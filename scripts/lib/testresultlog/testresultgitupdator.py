@@ -77,7 +77,7 @@ class TestResultGitUpdator(object):
                 print('Cannot find file (%s)' % test_module_file)
         self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
 
-def main():
+def main(args):
     scripts_path = os.path.dirname(os.path.realpath(__file__))
     testplan_conf = os.path.join(scripts_path, 'conf/testplan.conf')
 
