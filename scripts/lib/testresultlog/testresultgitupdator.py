@@ -59,8 +59,16 @@ class TestResultGitUpdator(object):
     def _push_testsuite_testcase_json_file_to_git_repo(self, file_dir, git_repo, git_branch):
         return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo, "-b", git_branch])
 
-    def update_test_result(self, work_dir, test_function_status_dict, git_dir, git_branch):
+    def _get_git_repo_dir(self, script_path, git_dir):
+        if git_dir == 'default':
+            script_path = os.path.join(script_path, '..')
+            git_dir = os.path.join(script_path, 'test-result-log-git')
+        return git_dir
+
+    def update_test_result(self, test_function_status_dict, script_path, git_dir, git_branch, work_dir):
+        git_dir = self._get_git_repo_dir(script_path, git_dir)
         self._checkout_git_repo_for_update(git_dir, git_branch)
+        work_dir = os.path.join(git_dir, work_dir)
         testmodule_testfunction_dict = self._get_testmodule_testfunction_dictionary(test_function_status_dict)
         test_module_list = testmodule_testfunction_dict.keys()
         for test_module in test_module_list:
@@ -72,7 +80,6 @@ class TestResultGitUpdator(object):
                 self._update_testresult_dictionary(testresult_dict, test_module, testmodule_testfunction_dict, test_function_status_dict)
                 #print('Updated Test Result Dictionary : %s' % testresult_dict)
                 self._write_testsuite_testcase_json_data_structure_to_file(test_module_file, json.dumps(testresult_dict, sort_keys=True, indent=4))
-
             else:
                 print('Cannot find file (%s)' % test_module_file)
         self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
@@ -81,20 +88,18 @@ def main(args):
     scripts_path = os.path.dirname(os.path.realpath(__file__))
     testplan_conf = os.path.join(scripts_path, 'conf/testplan.conf')
 
-    configparser = TestResultLogConfigParser(testplan_conf)
-    result_log_dir = configparser.get_testopia_config('TestResultUpdate', 'result_log_dir')
-    work_dir = configparser.get_testopia_config('TestResultUpdate', 'work_dir')
-    git_dir = configparser.get_testopia_config('TestResultUpdate', 'git_dir')
-    testplan_cycle = configparser.get_testopia_config('TestResultUpdate', 'testplan_cycle')
-
     testlogparser = TestLogParser()
-    test_function_status_dict = testlogparser.get_test_status(result_log_dir)
+    test_function_status_dict = testlogparser.get_test_status(args.log_file)
     print('DEGUG: test_function_status_dict: %s' % test_function_status_dict)
     testresultupdator = TestResultGitUpdator()
-    testresultupdator.update_test_result(work_dir, test_function_status_dict, git_dir, testplan_cycle)
+    testresultupdator.update_test_result(test_function_status_dict, args.script_path, args.git_repo, args.git_branch, args.work_dir)
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
     parser_build = subparsers.add_parser('update', help='Update test result status into the specified test result template',
                                          description='Update test result status from the test log into the specified test result template')
     parser_build.set_defaults(func=main)
+    parser_build.add_argument('-l', '--log_file', required=True, help='Full path to the test log file to be used for test result update')
+    parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='Git repository to be updated (optional, default will be /poky/test-result-log-git')
+    parser_build.add_argument('-b', '--git_branch', required=True, help='Git branch to be updated with test result')
+    parser_build.add_argument('-w', '--work_dir', required=True, help='Working dir from within the selected git repository to update with test result')

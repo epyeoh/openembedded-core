@@ -112,23 +112,10 @@ def main(args):
     component_conf = os.path.join(scripts_path, 'conf/testplan_component.conf')
     environment_conf = os.path.join(scripts_path, 'conf/testplan_component_environment.conf')
 
-    configparser = TestResultLogConfigParser(testplan_conf)
-    #testplan_component = configparser.get_testopia_config('TestPlanCreation', 'testplan_component')
-    #testcase_dir = configparser.get_testopia_config('TestPlanCreation', 'oeqa_testcase_dir')
-    #print('DEBUG: testcase_dir: %s' % testcase_dir)
-    #work_dir = configparser.get_testopia_config('TestPlanCreation', 'work_dir')
-    #print('DEBUG: work_dir: %s' % work_dir)
-    #git_dir = configparser.get_testopia_config('TestPlanCreation', 'git_dir')
-    #print('DEBUG: git_dir: %s' % git_dir)
-    #testplan_cycle = configparser.get_testopia_config('TestPlanCreation', 'testplan_cycle')
-    #print('DEBUG: testplan_cycle: %s' % testplan_cycle)
-
     testplan_creator = TestPlanCreator()
-    #test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(testplan_component, component_conf, environment_conf)
     test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(args.component, component_conf, environment_conf)
     print('DEGUG: test_env_matrix:')
     print(test_env_matrix)
-    #test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(testcase_dir)
     test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(args.script_path, args.source)
     print('DEGUG: test_moduleclass_function_dict:')
     print(test_moduleclass_function_dict)
@@ -137,8 +124,7 @@ def main(args):
     print(test_module_moduleclass_dict)
 
     testplan_git_writer = TestPlanGitWriter()
-    #testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, work_dir, testplan_component, git_dir, testplan_cycle)
-    testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, args.component, args.script_path, args.gitrepo, args.gitbranch)
+    testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, args.component, args.script_path, args.git_repo, args.git_branch)
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
@@ -153,7 +139,5 @@ def register_commands(subparsers):
          '"sdk" will search testcase available in poky/meta/lib/oeqa/sdk/cases. '
          '"sdkext" will search testcase available in poky/meta/lib/oeqa/sdkext/cases. ')
     parser_build.add_argument('-c', '--component', required=True, help='Component to be selected from conf/testplan_component.conf for creation of test environments')
-    parser_build.add_argument('-b', '--gitbranch', required=True, help='Git branch to be created for the git repository')
-    parser_build.add_argument('-g', '--gitrepo', required=False, default='default', help='Git repository to be created (optional, default will be /poky/test-result-log-git')
-
-
+    parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='Git repository to be created (optional, default will be /poky/test-result-log-git')
+    parser_build.add_argument('-b', '--git_branch', required=True, help='Git branch to be created for the git repository')
