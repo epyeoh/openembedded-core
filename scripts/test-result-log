@@ -11,12 +11,14 @@ lib_path = script_path + '/lib'
 sys.path = sys.path + [lib_path]
 import testresultlog.testplancreator
 import testresultlog.testresultgitupdator
+import testresultlog.testresultviewer
 
 def main():
     parser = argparse.ArgumentParser(description="test-result-log script.")
     subparser = parser.add_subparsers()
     testresultlog.testplancreator.register_commands(subparser)
     testresultlog.testresultgitupdator.register_commands(subparser)
+    testresultlog.testresultviewer.register_commands(subparser)
     args = parser.parse_args()
     args.script_path = script_path
     args.func(args)

@@ -134,10 +134,10 @@ def register_commands(subparsers):
     SOURCE = ('runtime', 'selftest', 'sdk', 'sdkext')
     parser_build.add_argument('-s', '--source', required=True, choices=SOURCE,
     help='Testcase source to be selected from the list (runtime, selftest, sdk or sdkext). '
-         '"runtime" will search testcase available in poky/meta/lib/oeqa/runtime/cases. '
-         '"selftest" will search testcase available in poky/meta/lib/oeqa/selftest/cases. '
-         '"sdk" will search testcase available in poky/meta/lib/oeqa/sdk/cases. '
-         '"sdkext" will search testcase available in poky/meta/lib/oeqa/sdkext/cases. ')
+         '"runtime" will search testcase available in meta/lib/oeqa/runtime/cases. '
+         '"selftest" will search testcase available in meta/lib/oeqa/selftest/cases. '
+         '"sdk" will search testcase available in meta/lib/oeqa/sdk/cases. '
+         '"sdkext" will search testcase available in meta/lib/oeqa/sdkext/cases. ')
     parser_build.add_argument('-c', '--component', required=True, help='Component to be selected from conf/testplan_component.conf for creation of test environments')
-    parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='Git repository to be created (optional, default will be /poky/test-result-log-git')
+    parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='(Optional) Git repository to be created, default will be test-result-log-git')
     parser_build.add_argument('-b', '--git_branch', required=True, help='Git branch to be created for the git repository')
