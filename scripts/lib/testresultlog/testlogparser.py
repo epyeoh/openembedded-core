@@ -46,10 +46,10 @@ class TestLogParser(object):
                 logs.append(line)
                 return 'Found'
 
-    def get_test_log(self, log_file, test_status, case_name, module_class_name):
+    def get_test_log(self, log_file, test_status, testcase_name, testsuite_name):
         if test_status == 'FAILED':
             test_status = 'FAIL'
-        regex_search_start = ".*%s: %s \(%s\).*" % (test_status, case_name, module_class_name)
+        regex_search_start = ".*%s: %s \(%s\).*" % (test_status, testcase_name, testsuite_name)
         regex_search_end_fail_or = ".*FAIL: test.*"
         regex_search_end_error_or = ".*ERROR: test.*"
         regex_search_end = ".*Ran.*tests in .*s"

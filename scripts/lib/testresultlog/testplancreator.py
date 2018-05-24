@@ -1,73 +1,33 @@
 import os
 import unittest
 from testresultlog.testresultlogconfigparser import TestResultLogConfigParser
-from testresultlog.testplangitwriter import TestPlanGitWriter
+from testresultlog.testresultgitstore import TestResultGitStore
 import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
 
 class TestPlanCreator(object):
 
-    def _init_environment_multiplication_matrix(self, env_matrix, env_value_list, env):
-        #print(env_value_list)
-        for env_value in env_value_list:
-            env_matrix.append('%s_%s' % (env, env_value))
-
-    def _multiply_current_env_matrix_with_new_env_list(self, env_matrix, env_value_list, env):
-        #print(env_value_list)
-        ml = []
-        for value in env_matrix:
-            for new_value in env_value_list:
-                ml.append('%s,%s' % (value, '%s_%s' % (env, new_value)))
-        return ml
-
-    def _generate_flat_list_of_test_module_function(self, test_suite):
-        for test in test_suite:
-            if unittest.suite._isnotsuite(test):
-                yield test
-            else:
-                for subtest in self._generate_flat_list_of_test_module_function(test):
-                    yield subtest
-
-    def _get_test_moduleclass_name(self, test):
-        test_module_name = test[test.find("(")+1:test.find(")")]
-        #print('DEBUG: %s : module : %s' % (test, test_module_name))
-        return test_module_name
-
-    def _get_test_function_name(self, test):
-        test_function_name = test[0:test.find("(")-1]
-        #print('DEBUG: %s : function : %s' % (test, test_function_name))
-        return test_function_name
-
-    def _get_test_module_name_from_key(self, key):
-        test_module_name = key[0:key.find(".")]
-        return test_module_name
-
-    def _get_test_class_name_from_key(self, key):
-        test_class_name = key[key.find(".")+1:]
-        return test_class_name
+    def __init__(self):
+        self.script_path = os.path.dirname(os.path.realpath(__file__))
+        self.base_path = self.script_path + '/../../..'
 
     def _get_test_configuration_list(self, conf_path, section):
         config_parser = TestResultLogConfigParser(conf_path)
         return config_parser.get_config_items(section)
 
-    def _get_oeqa_source_dir(self, script_path, source):
-        print('script_path: %s' % script_path)
-        script_path = os.path.join(script_path, '..')
-        if source == 'runtime':
-            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/runtime/cases')
-        elif source == 'selftest':
-            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/selftest/cases')
-        elif source == 'sdk':
-            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/sdk/cases')
-        else:
-            oeqa_dir = os.path.join(script_path, 'meta/lib/oeqa/sdkext/cases')
-        return oeqa_dir
+    def _init_environment_multiplication_matrix(self, env_matrix, new_env_list, new_env_header):
+        #print(env_value_list)
+        for env in new_env_list:
+            env_matrix.append('%s_%s' % (new_env_header, env))
 
-    def _get_test_module_and_test_function_list(self, test_dir):
-        loader = unittest.TestLoader()
-        test_suite = loader.discover(start_dir=test_dir, pattern='*.py')
-        return self._generate_flat_list_of_test_module_function(test_suite)
+    def _multiply_current_env_list_with_new_env_list(self, cur_env_list, new_env_list, new_env_header):
+        #print(env_value_list)
+        multiplied_list = []
+        for cur_env in cur_env_list:
+            for new_env in new_env_list:
+                multiplied_list.append('%s,%s' % (cur_env, '%s_%s' % (new_env_header, new_env)))
+        return multiplied_list
 
     def get_test_environment_multiplication_matrix(self, test_component, component_conf, environment_conf):
         test_environment_list = self._get_test_configuration_list(component_conf, test_component)
@@ -77,34 +37,74 @@ class TestPlanCreator(object):
             if len(env_matrix) == 0:
                 self._init_environment_multiplication_matrix(env_matrix, env_value_list, env)
             else:
-                env_matrix = self._multiply_current_env_matrix_with_new_env_list(env_matrix, env_value_list, env)
+                env_matrix = self._multiply_current_env_list_with_new_env_list(env_matrix, env_value_list, env)
         return env_matrix
 
-    def get_test_moduleclass_test_function_dictionary(self, script_path, source):
-        test_dir = self._get_oeqa_source_dir(script_path, source)
-        print('test_dir: %s' % test_dir)
-        test_module_function_list = self._get_test_module_and_test_function_list(test_dir)
-        test_moduleclass_func_dict = {}
-        for test in test_module_function_list:
-            key = self._get_test_moduleclass_name(str(test))
-            value = self._get_test_function_name(str(test))
-            if key in test_moduleclass_func_dict:
-                test_moduleclass_func_dict[key].append(value)
-            else:
-                test_moduleclass_func_dict[key] = [value]
-        return test_moduleclass_func_dict
+    def _get_oeqa_source_dir(self, source):
+        if source == 'runtime':
+            oeqa_dir = os.path.join(self.base_path, 'meta/lib/oeqa/runtime/cases')
+        elif source == 'selftest':
+            oeqa_dir = os.path.join(self.base_path, 'meta/lib/oeqa/selftest/cases')
+        elif source == 'sdk':
+            oeqa_dir = os.path.join(self.base_path, 'meta/lib/oeqa/sdk/cases')
+        else:
+            oeqa_dir = os.path.join(self.base_path, 'meta/lib/oeqa/sdkext/cases')
+        return oeqa_dir
 
-    def get_test_module_test_moduleclass_dictionary(self, test_moduleclass_func_dict):
-        moduleclass_list = test_moduleclass_func_dict.keys()
-        test_module_moduleclass_dict = {}
-        for module_class in moduleclass_list:
-            module_name = self._get_test_module_name_from_key(module_class)
-            class_name = '%s.%s' % (module_name, self._get_test_class_name_from_key(module_class))
-            if module_name in test_module_moduleclass_dict:
-                test_module_moduleclass_dict[module_name].append(class_name)
+    def _discover_unittest_testsuite_testcase(self, test_dir):
+        loader = unittest.TestLoader()
+        testsuite_testcase = loader.discover(start_dir=test_dir, pattern='*.py')
+        return testsuite_testcase
+
+    def _generate_flat_list_of_unittest_testcase(self, testsuite):
+        for test in testsuite:
+            if unittest.suite._isnotsuite(test):
+                yield test
             else:
-                test_module_moduleclass_dict[module_name] = [class_name]
-        return test_module_moduleclass_dict
+                for subtest in self._generate_flat_list_of_unittest_testcase(test):
+                    yield subtest
+
+    def _get_testsuite_from_unittest_testcase(self, unittest_testcase):
+        testsuite = unittest_testcase[unittest_testcase.find("(")+1:unittest_testcase.find(")")]
+        #print('DEBUG: %s : testsuite : %s' % (unittest_testcase, testsuite))
+        return testsuite
+
+    def _get_testcase_from_unittest_testcase(self, unittest_testcase):
+        testcase = unittest_testcase[0:unittest_testcase.find("(")-1]
+        testsuite = self._get_testsuite_from_unittest_testcase(unittest_testcase)
+        testcase = '%s.%s' % (testsuite, testcase)
+        #print('DEBUG: %s : testcase : %s' % (unittest_testcase, testcase))
+        return testcase
+
+    def _get_testmodule_from_testsuite(self, testsuite):
+        testmodule = testsuite[0:testsuite.find(".")]
+        return testmodule
+
+    def get_testsuite_testcase_dictionary(self, source):
+        work_dir = self._get_oeqa_source_dir(source)
+        print('work_dir: %s' % work_dir)
+        unittest_testsuite_testcase = self._discover_unittest_testsuite_testcase(work_dir)
+        unittest_testcase_list = self._generate_flat_list_of_unittest_testcase(unittest_testsuite_testcase)
+        testsuite_testcase_dict = {}
+        for unittest_testcase in unittest_testcase_list:
+            testsuite = self._get_testsuite_from_unittest_testcase(str(unittest_testcase))
+            testcase = self._get_testcase_from_unittest_testcase(str(unittest_testcase))
+            if testsuite in testsuite_testcase_dict:
+                testsuite_testcase_dict[testsuite].append(testcase)
+            else:
+                testsuite_testcase_dict[testsuite] = [testcase]
+        return testsuite_testcase_dict
+
+    def get_testmodule_testsuite_dictionary(self, testsuite_testcase_dict):
+        testsuite_list = testsuite_testcase_dict.keys()
+        testmodule_testsuite_dict = {}
+        for testsuite in testsuite_list:
+            testmodule = self._get_testmodule_from_testsuite(testsuite)
+            if testmodule in testmodule_testsuite_dict:
+                testmodule_testsuite_dict[testmodule].append(testsuite)
+            else:
+                testmodule_testsuite_dict[testmodule] = [testsuite]
+        return testmodule_testsuite_dict
 
 def main(args):
     scripts_path = os.path.dirname(os.path.realpath(__file__))
@@ -116,15 +116,18 @@ def main(args):
     test_env_matrix = testplan_creator.get_test_environment_multiplication_matrix(args.component, component_conf, environment_conf)
     print('DEGUG: test_env_matrix:')
     print(test_env_matrix)
-    test_moduleclass_function_dict = testplan_creator.get_test_moduleclass_test_function_dictionary(args.script_path, args.source)
-    print('DEGUG: test_moduleclass_function_dict:')
-    print(test_moduleclass_function_dict)
-    test_module_moduleclass_dict = testplan_creator.get_test_module_test_moduleclass_dictionary(test_moduleclass_function_dict)
-    print('DEGUG: test_module_moduleclass_dict:')
-    print(test_module_moduleclass_dict)
+    testsuite_testcase_dict = testplan_creator.get_testsuite_testcase_dictionary(args.source)
+    print('DEGUG: testsuite_testcase_dict:')
+    print(testsuite_testcase_dict)
+    testmodule_testsuite_dict = testplan_creator.get_testmodule_testsuite_dictionary(testsuite_testcase_dict)
+    print('DEGUG: testmodule_testsuite_dict:')
+    print(testmodule_testsuite_dict)
 
-    testplan_git_writer = TestPlanGitWriter()
-    testplan_git_writer.write_testplan_to_storage(test_env_matrix, test_module_moduleclass_dict, test_moduleclass_function_dict, args.component, args.script_path, args.git_repo, args.git_branch)
+    for env in test_env_matrix:
+        env_list = env.split(",")
+        print(env_list)
+        testresultstore = TestResultGitStore()
+        testresultstore.create_test_result(args.git_repo, args.git_branch, args.component, env_list, testmodule_testsuite_dict, testsuite_testcase_dict)
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
