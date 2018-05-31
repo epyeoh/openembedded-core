@@ -59,7 +59,20 @@ class TestResultGitStore(object):
         return git_dir
 
     def _check_if_git_dir_exist(self, git_dir):
-        return subprocess.run(["ls", '%s/.git' % git_dir])
+        completed_process = subprocess.run(["ls", '%s/.git' % git_dir])
+        if completed_process.returncode == 0:
+            return True
+        else:
+            return False
+
+    def _check_if_git_dir_contain_project_and_environment_directory(self, git_dir, project, environment_list):
+        project_dir = os.path.join(git_dir, project)
+        project_env_dir = self._create_project_environment_directory_path(project_dir, environment_list)
+        completed_process = subprocess.run(["ls", project_env_dir])
+        if completed_process.returncode == 0:
+            return True
+        else:
+            return False
 
     def _push_testsuite_testcase_json_file_to_git_repo(self, file_dir, git_repo, git_branch):
         return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo, "-b", git_branch])
@@ -89,8 +102,9 @@ class TestResultGitStore(object):
         for testsuite in testsuite_list:
             testcase_list = testsuite_testcase_dict[testsuite]
             for testcase in testcase_list:
-                testcase_status = testcase_status_dict[testcase]
-                target_testresult_dict['testsuite'][testsuite]['testcase'][testcase]['testresult'] = testcase_status
+                if testcase in testcase_status_dict:
+                    testcase_status = testcase_status_dict[testcase]
+                    target_testresult_dict['testsuite'][testsuite]['testcase'][testcase]['testresult'] = testcase_status
 
     def _create_test_result_from_empty(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict):
         workspace_dir = self._create_temporary_workspace_dir()
@@ -121,9 +135,7 @@ class TestResultGitStore(object):
 
     def create_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict):
         git_dir = self._get_default_git_dir(git_dir)
-        # check if existing git_dir exist
-        completed_process = self._check_if_git_dir_exist(git_dir)
-        if completed_process.returncode == 0:
+        if self._check_if_git_dir_exist(git_dir):
             self._create_test_result_from_existing(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
         else:
             self._create_test_result_from_empty(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
@@ -149,3 +161,39 @@ class TestResultGitStore(object):
             file_path = os.path.join(project_env_dir, '%s.log' % testcaselog)
             self._write_log_file(file_path, testcase_logs_dict[testcaselog])
         self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
+
+    def smart_update_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict):
+        '''
+        if target git dir not exist
+        create template from empty & then update
+        push template in temporary to target git dir
+
+        if target git dir exist but project and environment dir not exist
+        create template from existing target git dir & then update
+        push to target git dir
+
+        if target git dir exit and project and environment dir does exist
+        update in target git dir
+        push to target git dir
+        '''
+        git_dir = self._get_default_git_dir(git_dir)
+        if self._check_if_git_dir_exist(git_dir):
+            self._checkout_git_repo(git_dir, git_branch)
+            print('Found git_dir: %s' % git_dir)
+            print('Entering git_dir: %s' % git_dir)
+            if self._check_if_git_dir_contain_project_and_environment_directory(git_dir, project, environment_list):
+                print('Found project and environment inside git_dir: %s' % git_dir)
+                print('Updating test result')
+                self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
+            else:
+                print('Could not find project and environment inside git_dir: %s' % git_dir)
+                print('Creating project and environment inside git_dir: %s' % git_dir)
+                self._create_test_result_from_existing(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
+                print('Updating test result')
+                self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
+        else:
+            print('Could not find git_dir: %s' % git_dir)
+            print('Creating git_dir, project, and environment: %s' % git_dir)
+            self._create_test_result_from_empty(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
+            print('Updating test result')
+            self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)

@@ -11,6 +11,7 @@ lib_path = script_path + '/lib'
 sys.path = sys.path + [lib_path]
 import testresultlog.testplancreator
 import testresultlog.testresultupdator
+import testresultlog.testresultsmartupdator
 import testresultlog.testresultviewer
 
 def main():
@@ -18,6 +19,7 @@ def main():
     subparser = parser.add_subparsers()
     testresultlog.testplancreator.register_commands(subparser)
     testresultlog.testresultupdator.register_commands(subparser)
+    testresultlog.testresultsmartupdator.register_commands(subparser)
     testresultlog.testresultviewer.register_commands(subparser)
     args = parser.parse_args()
     args.script_path = script_path
