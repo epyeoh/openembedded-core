@@ -98,13 +98,20 @@ class TestResultGitStore(object):
             print('Cannot find file (%s)' % file)
             return None
 
-    def _update_target_testresult_dictionary_with_status(self, target_testresult_dict, testsuite_list, testsuite_testcase_dict, testcase_status_dict):
+    def _get_testcase_log_need_removal_list(self, testcase, cur_testcase_status, next_testcase_status, testcase_log_remove_list):
+        if cur_testcase_status == 'FAILED' or cur_testcase_status == 'ERROR':
+            if next_testcase_status == 'PASSED' or next_testcase_status == 'SKIPPED':
+                testcase_log_remove_list.append(testcase)
+
+    def _update_target_testresult_dictionary_with_status(self, target_testresult_dict, testsuite_list, testsuite_testcase_dict, testcase_status_dict, testcase_log_remove_list):
         for testsuite in testsuite_list:
             testcase_list = testsuite_testcase_dict[testsuite]
             for testcase in testcase_list:
                 if testcase in testcase_status_dict:
-                    testcase_status = testcase_status_dict[testcase]
-                    target_testresult_dict['testsuite'][testsuite]['testcase'][testcase]['testresult'] = testcase_status
+                    cur_testcase_status = target_testresult_dict['testsuite'][testsuite]['testcase'][testcase]['testresult']
+                    next_testcase_status = testcase_status_dict[testcase]
+                    self._get_testcase_log_need_removal_list(testcase, cur_testcase_status, next_testcase_status, testcase_log_remove_list)
+                    target_testresult_dict['testsuite'][testsuite]['testcase'][testcase]['testresult'] = next_testcase_status
 
     def _create_test_result_from_empty(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict):
         workspace_dir = self._create_temporary_workspace_dir()
@@ -150,12 +157,17 @@ class TestResultGitStore(object):
         self._checkout_git_repo(git_dir, git_branch)
         project_dir = os.path.join(git_dir, project)
         project_env_dir = self._create_project_environment_directory_path(project_dir, environment_list)
+        testcase_log_remove_list = []
         for testmodule in self._get_testmodule_list(testmodule_testsuite_dict):
             testmodule_file = os.path.join(project_env_dir, '%s.json' % testmodule)
             target_testresult_dict = self._load_test_module_file_with_json_into_dictionary(testmodule_file)
             testsuite_list = testmodule_testsuite_dict[testmodule]
-            self._update_target_testresult_dictionary_with_status(target_testresult_dict, testsuite_list, testsuite_testcase_dict, testcase_status_dict)
+            self._update_target_testresult_dictionary_with_status(target_testresult_dict, testsuite_list, testsuite_testcase_dict, testcase_status_dict, testcase_log_remove_list)
             self._write_testsuite_testcase_json_data_structure_to_file(testmodule_file, json.dumps(target_testresult_dict, sort_keys=True, indent=4))
+        for testcase_log_remove in testcase_log_remove_list:
+            file_remove_path = os.path.join(project_env_dir, '%s.log' % testcase_log_remove)
+            if os.path.exists(file_remove_path):
+                os.remove(file_remove_path)
         testcase_log_list = testcase_logs_dict.keys()
         for testcaselog in testcase_log_list:
             file_path = os.path.join(project_env_dir, '%s.log' % testcaselog)

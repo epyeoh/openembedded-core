@@ -135,6 +135,9 @@ def main(args):
     testlogparser = TestLogParser()
     testcase_status_dict = testlogparser.get_test_status(args.log_file)
     print('DEGUG: testcase_status_dict: %s' % testcase_status_dict)
+    if args.source == 'runtime':
+        runtime_image_env = testlogparser.get_runtime_test_image_environment(args.log_file)
+        print('runtime image environment: %s' % runtime_image_env)
 
     testresultupdator = TestResultUpdator()
     testsuite_testcase_dict = testresultupdator.get_testsuite_testcase_dictionary(args.source)
@@ -148,6 +151,8 @@ def main(args):
     print('DEGUG: test_logs:')
     print(test_logs_dict)
 
+    if runtime_image_env not in args.environment_list:
+        args.environment_list = '%s,%s' % (runtime_image_env, args.environment_list)
     env_list = args.environment_list.split(",")
     testresultstore = TestResultGitStore()
     testresultstore.smart_update_test_result(args.git_repo, args.git_branch, args.component, env_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, test_logs_dict)
@@ -167,5 +172,5 @@ def register_commands(subparsers):
          '"selftest" will search testcase available in meta/lib/oeqa/selftest/cases. '
          '"sdk" will search testcase available in meta/lib/oeqa/sdk/cases. '
          '"sdkext" will search testcase available in meta/lib/oeqa/sdkext/cases. ')
-    parser_build.add_argument('-c', '--component', required=True, help='Component to be selected from conf/testplan_component.conf for creation of test environments')
+    parser_build.add_argument('-c', '--component', required=True, help='Component selected (as the top folder) to store the related test environments')
     parser_build.add_argument('-e', '--environment_list', required=True, help='List of environment to be used to perform update')
