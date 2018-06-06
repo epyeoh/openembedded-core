@@ -19,14 +19,16 @@ class TestPlanCreator(object):
     def _init_environment_multiplication_matrix(self, env_matrix, new_env_list, new_env_header):
         #print(env_value_list)
         for env in new_env_list:
-            env_matrix.append('%s_%s' % (new_env_header, env))
+            #env_matrix.append('%s_%s' % (new_env_header, env))
+            env_matrix.append(env)
 
     def _multiply_current_env_list_with_new_env_list(self, cur_env_list, new_env_list, new_env_header):
         #print(env_value_list)
         multiplied_list = []
         for cur_env in cur_env_list:
             for new_env in new_env_list:
-                multiplied_list.append('%s,%s' % (cur_env, '%s_%s' % (new_env_header, new_env)))
+                #multiplied_list.append('%s,%s' % (cur_env, '%s_%s' % (new_env_header, new_env)))
+                multiplied_list.append('%s,%s' % (cur_env, new_env))
         return multiplied_list
 
     def get_test_environment_multiplication_matrix(self, test_component, component_conf, environment_conf):
@@ -142,5 +144,5 @@ def register_commands(subparsers):
          '"sdk" will search testcase available in meta/lib/oeqa/sdk/cases. '
          '"sdkext" will search testcase available in meta/lib/oeqa/sdkext/cases. ')
     parser_build.add_argument('-c', '--component', required=True, help='Component to be selected from conf/testplan_component.conf for creation of test environments')
-    parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='(Optional) Git repository to be created, default will be test-result-log-git')
+    parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='(Optional) Git repository to be created, default will be <top_dir>/test-result-log-git')
     parser_build.add_argument('-b', '--git_branch', required=True, help='Git branch to be created for the git repository')

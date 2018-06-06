@@ -39,7 +39,24 @@ class TestLogParser(object):
                 if m:
                     image_env = line[:line.find("(")-1]
                     image_env = image_env.strip()
+                    break
         return image_env
+
+    def get_runtime_test_qemu_environment(self, log_file):
+        regex = "Output:.*Linux qemu.*"
+        regex_comp = re.compile(regex)
+        qemu_env = ''
+        with open(log_file, "r") as f:
+            for line in f:
+                line = line.strip()
+                m = regex_comp.search(line)
+                if m:
+                    qemu_list = ['qemuarm', 'qemuarm64', 'qemumips', 'qemumips64', 'qemuppc', 'qemux86', 'qemux86-64']
+                    for qemu in qemu_list:
+                        if qemu in line:
+                            qemu_env = qemu
+                            break
+        return qemu_env
 
     def _search_log_to_capture(self, logs, line, state, regex_comp_start, regex_comp_end_fail_or, regex_comp_end_error_or, regex_comp_end):
         if state == 'Searching':
