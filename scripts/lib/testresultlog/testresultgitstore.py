@@ -80,7 +80,7 @@ class TestResultGitStore(object):
     def _remove_temporary_workspace_dir(self, workspace_dir):
         return subprocess.run(["rm", "-rf",  workspace_dir])
 
-    def _checkout_git_repo(self, git_dir, git_branch):
+    def _init_git(self, git_dir):
         try:
             repo = GitRepo(git_dir, is_topdir=True)
         except GitError:
@@ -88,6 +88,10 @@ class TestResultGitStore(object):
                    "at {}\nPlease specify an existing Git repository, "
                    "an empty directory or a non-existing directory "
                    "path.".format(git_dir))
+        return repo
+
+    def _checkout_git_repo(self, git_dir, git_branch):
+        repo = self._init_git(git_dir)
         repo.run_cmd('checkout %s' % git_branch)
 
     def _load_test_module_file_with_json_into_dictionary(self, file):
@@ -209,3 +213,67 @@ class TestResultGitStore(object):
             self._create_test_result_from_empty(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
             print('Updating test result')
             self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
+
+    def _check_if_remote_origin_exist_inside_repo(self, repo):
+        try:
+            repo.run_cmd('remote get-url origin')
+            return True
+        except GitError:
+            return False
+
+    def _check_if_remote_origin_url_match(self, repo, git_remote):
+        try:
+            origin_url = repo.run_cmd('remote get-url origin')
+            if origin_url == git_remote:
+                return True
+            else:
+                return False
+        except GitError:
+            return False
+
+    def _add_remote_origin_inside_repo(self, repo, git_remote):
+        try:
+            repo.run_cmd('remote add origin %s' % git_remote)
+        except GitError:
+            print("The remote add origin failed inside the Git repository")
+
+    def _remove_remote_origin_inside_repo(self, repo):
+        try:
+            repo.run_cmd('remote remove origin')
+        except GitError:
+            print("The remote remove origin failed inside the Git repository")
+
+    def _fetch_remote_origin(self, repo, git_branch):
+        print('Start fetch origin')
+        try:
+            repo.run_cmd('fetch origin %s' % git_branch)
+        except GitError:
+            print("The fetch origin % failed inside the Git repository" % git_branch)
+
+    def _rebase_remote_origin(self, repo, git_branch):
+        print('Start rebase origin')
+        try:
+            repo.run_cmd('rebase origin/%s' % git_branch)
+        except GitError:
+            print("The rebase origin/% failed inside the Git repository" % git_branch)
+
+    def _push_to_remote_origin(self, repo, git_branch):
+        print('Start push origin')
+        try:
+            repo.run_cmd('push origin %s' % git_branch)
+        except GitError:
+            print("The push origin % failed inside the Git repository" % git_branch)
+
+    def git_remote_fetch_rebase_push(self, git_dir, git_branch, git_remote):
+        git_dir = self._get_default_git_dir(git_dir)
+        repo = self._init_git(git_dir)
+        print('Fetching, Rebasing, Pushing to remote')
+        if self._check_if_remote_origin_exist_inside_repo(repo):
+            if not self._check_if_remote_origin_url_match(git_remote):
+                self._remove_remote_origin_inside_repo(repo)
+                self._add_remote_origin_inside_repo(repo, git_remote)
+        else:
+            self._add_remote_origin_inside_repo(repo, git_remote)
+        self._fetch_remote_origin(repo, git_branch)
+        self._rebase_remote_origin(repo, git_branch)
+        self._push_to_remote_origin(repo, git_branch)

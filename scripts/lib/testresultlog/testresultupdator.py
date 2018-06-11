@@ -165,6 +165,8 @@ def main(args):
 
     testresultstore = TestResultGitStore()
     testresultstore.smart_update_test_result(args.git_repo, args.git_branch, args.component, env_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, test_logs_dict)
+    if (args.git_remote):
+        testresultstore.git_remote_fetch_rebase_push(args.git_repo, args.git_branch, args.git_remote)
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
@@ -174,6 +176,7 @@ def register_commands(subparsers):
     parser_build.add_argument('-l', '--log_file', required=True, help='Full path to the test log file to be used for test result update')
     parser_build.add_argument('-g', '--git_repo', required=False, default='default', help='(Optional) Git repository to be updated ,default will be <top_dir>/test-result-log-git')
     parser_build.add_argument('-b', '--git_branch', required=True, help='Git branch to be updated with test result')
+    parser_build.add_argument('-r', '--git_remote', required=False, default='default', help='(Optional) Git remote repository to be updated')
     SOURCE = ('runtime', 'selftest', 'sdk', 'sdkext')
     parser_build.add_argument('-s', '--source', required=True, choices=SOURCE,
     help='Testcase source to be selected from the list (runtime, selftest, sdk or sdkext). '
