@@ -269,7 +269,7 @@ class TestResultGitStore(object):
         repo = self._init_git(git_dir)
         print('Fetching, Rebasing, Pushing to remote')
         if self._check_if_remote_origin_exist_inside_repo(repo):
-            if not self._check_if_remote_origin_url_match(git_remote):
+            if not self._check_if_remote_origin_url_match(repo, git_remote):
                 self._remove_remote_origin_inside_repo(repo)
                 self._add_remote_origin_inside_repo(repo, git_remote)
         else:
