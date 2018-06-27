@@ -1,0 +1,6 @@
+----------------------------------------------------------------------------
+test_component | test_environment | passed | failed | skipped
+----------------------------------------------------------------------------
+{% for report in test_reports |sort(attribute='test_component_environment') %}
+{{ report.test_component }} | {{ report.test_environment }} | {{ report.passed }} | {{ report.failed }} | {{ report.skipped }}
+{% endfor %}

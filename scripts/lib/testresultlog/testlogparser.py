@@ -43,7 +43,8 @@ class TestLogParser(object):
         return image_env
 
     def get_runtime_test_qemu_environment(self, log_file):
-        regex = "Output:.*Linux qemu.*"
+        #regex = "Output:.*Linux qemu.*"
+        regex = "DEBUG: launchcmd=runqemu*"
         regex_comp = re.compile(regex)
         qemu_env = ''
         with open(log_file, "r") as f:

@@ -65,6 +65,13 @@ class TestResultGitStore(object):
         else:
             return False
 
+    def _check_if_git_branch_exist(self, repo, git_branch):
+        try:
+            repo.run_cmd('checkout %s' % git_branch)
+            return True
+        except GitError:
+            return False
+
     def _check_if_git_dir_contain_project_and_environment_directory(self, git_dir, project, environment_list):
         project_dir = os.path.join(git_dir, project)
         project_env_dir = self._create_project_environment_directory_path(project_dir, environment_list)
@@ -90,8 +97,7 @@ class TestResultGitStore(object):
                    "path.".format(git_dir))
         return repo
 
-    def _checkout_git_repo(self, git_dir, git_branch):
-        repo = self._init_git(git_dir)
+    def _checkout_git_repo(self, repo, git_branch):
         repo.run_cmd('checkout %s' % git_branch)
 
     def _load_test_module_file_with_json_into_dictionary(self, file):
@@ -132,7 +138,7 @@ class TestResultGitStore(object):
         self._remove_temporary_workspace_dir(workspace_dir)
 
     def _create_test_result_from_existing(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict):
-        self._checkout_git_repo(git_dir, git_branch)
+        #self._checkout_git_repo(git_dir, git_branch)
         project_dir = os.path.join(git_dir, project)
         project_env_dir = self._create_project_environment_directory_path(project_dir, environment_list)
         pathlib.Path(project_env_dir).mkdir(parents=True, exist_ok=True)
@@ -144,21 +150,90 @@ class TestResultGitStore(object):
             self._write_testsuite_testcase_json_data_structure_to_file(file_path, module_json_structure)
         self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
 
-    def create_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict):
-        git_dir = self._get_default_git_dir(git_dir)
-        if self._check_if_git_dir_exist(git_dir):
-            self._create_test_result_from_existing(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
-        else:
-            self._create_test_result_from_empty(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
-
     def _write_log_file(self, file_path, logs):
         with open(file_path, 'a') as the_file:
             for line in logs:
                 the_file.write(line + '\n')
 
+    def _git_check_if_local_repo_contain_remote_origin(self, repo):
+        try:
+            repo.run_cmd('remote get-url origin')
+            return True
+        except GitError:
+            return False
+
+    def _git_check_if_local_repo_remote_origin_url_match(self, repo, git_remote):
+        try:
+            origin_url = repo.run_cmd('remote get-url origin')
+            if origin_url == git_remote:
+                return True
+            else:
+                return False
+        except GitError:
+            return False
+
+    def _git_fetch_remote_origin(self, repo):
+        print('Fetching remote origin to local repo')
+        try:
+            repo.run_cmd('fetch origin')
+            return True
+        except GitError:
+            return False
+
+    def _git_check_if_remote_origin_has_branch(self, repo, git_branch):
+        try:
+            output = repo.run_cmd('show-branch remotes/origin/%s' % git_branch)
+            print(output)
+            return True
+        except GitError:
+            return False
+
+    def _git_add_local_repo_remote_origin(self, repo, git_remote):
+        print('Adding remote origin to local repo')
+        try:
+            repo.run_cmd('remote add origin %s' % git_remote)
+        except GitError:
+            print("The remote add origin failed inside the Git repository")
+
+    def _git_remove_local_repo_remote_origin(self, repo):
+        print('Removing outdated remote origin from local repo')
+        try:
+            repo.run_cmd('remote remove origin')
+        except GitError:
+            print("The remote remove origin failed inside the Git repository")
+
+    def _git_fetch_remote_origin_branch(self, repo, git_branch):
+        print('Fetch remote origin %s' % git_branch)
+        try:
+            repo.run_cmd('fetch origin %s' % git_branch)
+        except GitError:
+            print("The fetch origin % failed inside the Git repository" % git_branch)
+
+    def _git_rebase_remote_origin(self, repo, git_branch):
+        print('Rebasing origin/%s' % git_branch)
+        try:
+            repo.run_cmd('rebase origin/%s' % git_branch)
+        except GitError:
+            print("The rebase origin/% failed inside the Git repository" % git_branch)
+
+    def _git_push_local_branch_to_remote_origin(self, repo, git_branch):
+        print('Pushing origin %s' % git_branch)
+        try:
+            repo.run_cmd('push origin %s' % git_branch)
+        except GitError:
+            print("The push origin % failed inside the Git repository" % git_branch)
+
+    def create_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict):
+        #git_dir = self._get_default_git_dir(git_dir)
+        if self._check_if_git_dir_exist(git_dir):
+            self._create_test_result_from_existing(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
+        else:
+            self._create_test_result_from_empty(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
+
     def update_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict):
-        git_dir = self._get_default_git_dir(git_dir)
-        self._checkout_git_repo(git_dir, git_branch)
+        #git_dir = self._get_default_git_dir(git_dir)
+        repo = self._init_git(git_dir)
+        self._checkout_git_repo(repo, git_branch)
         project_dir = os.path.join(git_dir, project)
         project_env_dir = self._create_project_environment_directory_path(project_dir, environment_list)
         testcase_log_remove_list = []
@@ -192,88 +267,61 @@ class TestResultGitStore(object):
         update in target git dir
         push to target git dir
         '''
-        git_dir = self._get_default_git_dir(git_dir)
+        #git_dir = self._get_default_git_dir(git_dir)
+        git_dir_and_git_branch_exist = False
         if self._check_if_git_dir_exist(git_dir):
-            self._checkout_git_repo(git_dir, git_branch)
-            print('Found git_dir: %s' % git_dir)
-            print('Entering git_dir: %s' % git_dir)
-            if self._check_if_git_dir_contain_project_and_environment_directory(git_dir, project, environment_list):
-                print('Found project and environment inside git_dir: %s' % git_dir)
-                print('Updating test result')
-                self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
-            else:
-                print('Could not find project and environment inside git_dir: %s' % git_dir)
-                print('Creating project and environment inside git_dir: %s' % git_dir)
-                self._create_test_result_from_existing(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
-                print('Updating test result')
-                self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
-        else:
+            repo = self._init_git(git_dir)
+            if self._check_if_git_branch_exist(repo, git_branch):
+                git_dir_and_git_branch_exist = True
+                self._checkout_git_repo(repo, git_branch)
+                print('Found git_dir: %s' % git_dir)
+                print('Entering git_dir: %s' % git_dir)
+                if self._check_if_git_dir_contain_project_and_environment_directory(git_dir, project, environment_list):
+                    print('Found project and environment inside git_dir: %s' % git_dir)
+                    print('Updating test result')
+                    self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
+                else:
+                    print('Could not find project and environment inside git_dir: %s' % git_dir)
+                    print('Creating project and environment inside git_dir: %s' % git_dir)
+                    self._create_test_result_from_existing(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
+                    print('Updating test result')
+                    self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
+
+        if not git_dir_and_git_branch_exist:
             print('Could not find git_dir: %s' % git_dir)
             print('Creating git_dir, project, and environment: %s' % git_dir)
             self._create_test_result_from_empty(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict)
             print('Updating test result')
             self.update_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict, testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
 
-    def _check_if_remote_origin_exist_inside_repo(self, repo):
-        try:
-            repo.run_cmd('remote get-url origin')
-            return True
-        except GitError:
-            return False
-
-    def _check_if_remote_origin_url_match(self, repo, git_remote):
-        try:
-            origin_url = repo.run_cmd('remote get-url origin')
-            if origin_url == git_remote:
-                return True
-            else:
-                return False
-        except GitError:
-            return False
-
-    def _add_remote_origin_inside_repo(self, repo, git_remote):
-        try:
-            repo.run_cmd('remote add origin %s' % git_remote)
-        except GitError:
-            print("The remote add origin failed inside the Git repository")
-
-    def _remove_remote_origin_inside_repo(self, repo):
-        try:
-            repo.run_cmd('remote remove origin')
-        except GitError:
-            print("The remote remove origin failed inside the Git repository")
-
-    def _fetch_remote_origin(self, repo, git_branch):
-        print('Start fetch origin')
-        try:
-            repo.run_cmd('fetch origin %s' % git_branch)
-        except GitError:
-            print("The fetch origin % failed inside the Git repository" % git_branch)
-
-    def _rebase_remote_origin(self, repo, git_branch):
-        print('Start rebase origin')
-        try:
-            repo.run_cmd('rebase origin/%s' % git_branch)
-        except GitError:
-            print("The rebase origin/% failed inside the Git repository" % git_branch)
-
-    def _push_to_remote_origin(self, repo, git_branch):
-        print('Start push origin')
-        try:
-            repo.run_cmd('push origin %s' % git_branch)
-        except GitError:
-            print("The push origin % failed inside the Git repository" % git_branch)
-
     def git_remote_fetch_rebase_push(self, git_dir, git_branch, git_remote):
-        git_dir = self._get_default_git_dir(git_dir)
+        #git_dir = self._get_default_git_dir(git_dir)
         repo = self._init_git(git_dir)
         print('Fetching, Rebasing, Pushing to remote')
-        if self._check_if_remote_origin_exist_inside_repo(repo):
-            if not self._check_if_remote_origin_url_match(repo, git_remote):
-                self._remove_remote_origin_inside_repo(repo)
-                self._add_remote_origin_inside_repo(repo, git_remote)
+        if self._git_check_if_local_repo_contain_remote_origin(repo):
+            if not self._git_check_if_local_repo_remote_origin_url_match(repo, git_remote):
+                self._git_remove_local_repo_remote_origin(repo)
+                self._git_add_local_repo_remote_origin(repo, git_remote)
         else:
-            self._add_remote_origin_inside_repo(repo, git_remote)
-        self._fetch_remote_origin(repo, git_branch)
-        self._rebase_remote_origin(repo, git_branch)
-        self._push_to_remote_origin(repo, git_branch)
+            self._git_add_local_repo_remote_origin(repo, git_remote)
+        if self._git_fetch_remote_origin(repo):
+            if self._git_check_if_remote_origin_has_branch(repo, git_branch):
+                self._git_fetch_remote_origin_branch(repo, git_branch)
+                self._git_rebase_remote_origin(repo, git_branch)
+            self._git_push_local_branch_to_remote_origin(repo, git_branch)
+        else:
+            print('Git fetch origin failed. Stop proceeding to git push.')
+
+    def checkout_git_branch(self, git_dir, git_branch):
+        if self._check_if_git_dir_exist(git_dir):
+            repo = self._init_git(git_dir)
+            if self._check_if_git_branch_exist(repo, git_branch):
+                git_dir_and_git_branch_exist = True
+                self._checkout_git_repo(repo, git_branch)
+                return True
+            else:
+                print('Could not find git_branch: %s' % git_branch)
+                return False
+        else:
+            print('Could not find git_dir: %s' % git_dir)
+            return False

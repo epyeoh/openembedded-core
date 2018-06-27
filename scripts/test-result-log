@@ -13,6 +13,12 @@ import testresultlog.testresultcreator
 import testresultlog.testresultupdator
 import testresultlog.testresultviewer
 
+def _get_default_git_dir(git_dir):
+    base_path = script_path + '/..'
+    if git_dir == 'default':
+        git_dir = os.path.join(base_path, 'test-result-log.git')
+    return git_dir
+
 def main():
     parser = argparse.ArgumentParser(description="test-result-log script.")
     subparser = parser.add_subparsers()
@@ -21,6 +27,7 @@ def main():
     testresultlog.testresultviewer.register_commands(subparser)
     args = parser.parse_args()
     args.script_path = script_path
+    args.git_repo = _get_default_git_dir(args.git_repo)
     args.func(args)
 
 if __name__ == "__main__":
