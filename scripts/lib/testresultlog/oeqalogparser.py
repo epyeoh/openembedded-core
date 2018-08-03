@@ -1,9 +1,9 @@
 import re
 
-class TestLogParser(object):
+class OeqaLogParser(object):
 
     def get_test_status(self, log_file):
-        regex = ".*RESULTS - (?P<case_name>.*) - Testcase (?P<case_id>\d+): (?P<status>PASSED|FAILED|SKIPPED|ERROR)$"
+        regex = ".*RESULTS - (?P<case_name>.*) - Testcase .*: (?P<status>PASSED|FAILED|SKIPPED|ERROR|UNKNOWN).*$"
         regex_comp = re.compile(regex)
         results = {}
         with open(log_file, "r") as f:
@@ -11,20 +11,6 @@ class TestLogParser(object):
                 line = line.strip()
                 m = regex_comp.search(line)
                 if m:
-                    print(m.group('case_name') + ': ' +  m.group('status'))
-                    results[m.group('case_name')] = m.group('status')
-        return results
-
-    def get_failed_tests(self, log_file):
-        regex = ".*RESULTS - (?P<case_name>.*) - Testcase (?P<case_id>\d+): (?P<status>FAILED)$"
-        regex_comp = re.compile(regex)
-        results = {}
-        with open(log_file, "r") as f:
-            for line in f:
-                line = line.strip()
-                m = regex_comp.search(line)
-                if m:
-                    print(m.group('case_name') + ': ' +  m.group('status'))
                     results[m.group('case_name')] = m.group('status')
         return results
 
@@ -43,7 +29,6 @@ class TestLogParser(object):
         return image_env
 
     def get_runtime_test_qemu_environment(self, log_file):
-        #regex = "Output:.*Linux qemu.*"
         regex = "DEBUG: launchcmd=runqemu*"
         regex_comp = re.compile(regex)
         qemu_env = ''
@@ -94,8 +79,6 @@ class TestLogParser(object):
             for line in f:
                 line = line.strip()
                 if state == 'End':
-                    #print(results)
                     return logs
                 else:
                     state = self._search_log_to_capture(logs, line, state, regex_comp_start, regex_comp_end_fail_or, regex_comp_end_error_or, regex_comp_end)
-

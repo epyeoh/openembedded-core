@@ -1,7 +1,12 @@
-#!/usr/bin/python3
-#
-# Helper script for creating test result & log data then storage it to git
-# Then update test result status from test log into the git repo
+#!/usr/bin/env python3
+# As part of the initiative to provide LITE version Test Case Management System
+# with command-line and plain-text files (eg. manual test case file, test plan
+# file to specify list of test case to be executed, test result and log file)
+# to replace Testopia.
+# Test-result-log script was designed as part of the helper script for below purpose:
+# 1. To store test result & log file inside git repository
+# 2. (Future) To view text-based test summary report
+# 3. (Future) To enable planning of test cases for execution and track its completion
 #
 import os
 import sys
@@ -9,26 +14,62 @@ import argparse
 script_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = script_path + '/lib'
 sys.path = sys.path + [lib_path]
-import testresultlog.testresultcreator
-import testresultlog.testresultupdator
-import testresultlog.testresultviewer
+import argparse_oe
+import testresultlog.storeauto
 
-def _get_default_git_dir(git_dir):
+def _get_git_dir(git_dir):
     base_path = script_path + '/..'
     if git_dir == 'default':
         git_dir = os.path.join(base_path, 'test-result-log.git')
     return git_dir
 
+def _get_oeqa_case_dir(oe_dir, source):
+    if source == 'runtime':
+        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/runtime/cases')
+    elif source == 'selftest':
+        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/selftest/cases')
+    elif source == 'sdk':
+        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdk/cases')
+    else:
+        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdkext/cases')
+    return case_dir
+
+def _get_default_attribute_value(attribute_value):
+    if attribute_value == 'default':
+        attribute_value = ''
+    return attribute_value
+
+def _set_args_attribute_default_value(args):
+    if getattr(args, "environment_list", False):
+        print('Found environment_list attribute')
+        args.environment_list = _get_default_attribute_value(args.environment_list)
+    if getattr(args, "git_remote", False):
+        print('Found git_remote attribute')
+        args.git_remote = _get_default_attribute_value(args.git_remote)
+
 def main():
-    parser = argparse.ArgumentParser(description="test-result-log script.")
-    subparser = parser.add_subparsers()
-    testresultlog.testresultcreator.register_commands(subparser)
-    testresultlog.testresultupdator.register_commands(subparser)
-    testresultlog.testresultviewer.register_commands(subparser)
+    parser = argparse_oe.ArgumentParser(description="OpenEmbedded testcase management tool, to store test result then to view test summary report.",
+                                        add_help=False,
+                                        epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
+    parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+                        help='show this help message and exit')
+    subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
+    subparsers.required = True
+    subparsers.add_subparser_group('store', 'Store test result', 100)
+    testresultlog.storeauto.register_commands(subparsers)
     args = parser.parse_args()
-    args.script_path = script_path
-    args.git_repo = _get_default_git_dir(args.git_repo)
-    args.func(args)
+    if getattr(args, "git_repo", False):
+        args.git_repo = _get_git_dir(args.git_repo)
+    if getattr(args, "source", False):
+        oe_dir = script_path + '/..'
+        args.case_dir = _get_oeqa_case_dir(oe_dir, args.source)
+    _set_args_attribute_default_value(args)
+
+    try:
+        ret = args.func(args)
+    except argparse_oe.ArgumentUsageError as ae:
+        parser.error_subcommand(ae.message, ae.subcommand)
+    return ret
 
 if __name__ == "__main__":
     sys.exit(main())
