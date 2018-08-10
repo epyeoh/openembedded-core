@@ -1,3 +1,16 @@
+# test case management tool - store automated test result
+#
+# Copyright (c) 2018, Intel Corporation.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms and conditions of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
 from testresultlog.gitstore import GitStore
 from testresultlog.oeqatestdiscover import OeqaTestDiscover
 from testresultlog.oeqalogparser import OeqaLogParser
@@ -26,18 +39,14 @@ class StoreAuto(object):
         return environment_list
 
     def get_environment_list_for_test_log(self, log_file, log_file_source, environment_list, oeqa_logparser):
-        print('Getting test environment information from test log at %s' % log_file)
         if log_file_source == 'runtime':
             runtime_image_env = oeqa_logparser.get_runtime_test_image_environment(log_file)
-            print('runtime image environment: %s' % runtime_image_env)
             runtime_qemu_env = oeqa_logparser.get_runtime_test_qemu_environment(log_file)
-            print('runtime qemu environment: %s' % runtime_qemu_env)
             environment_list = self._add_new_environment_to_environment_list(environment_list, runtime_image_env)
             environment_list = self._add_new_environment_to_environment_list(environment_list, runtime_qemu_env)
         return environment_list.split(",")
 
     def get_testsuite_testcase_dictionary(self, testcase_dir):
-        print('Getting testsuite testcase information from oeqa directory at %s' % testcase_dir)
         oeqatestdiscover = OeqaTestDiscover()
         testcase_list = oeqatestdiscover.get_oeqa_testcase_list(testcase_dir)
         testsuite_testcase_dict = {}
@@ -50,7 +59,6 @@ class StoreAuto(object):
         return testsuite_testcase_dict
 
     def get_testmodule_testsuite_dictionary(self, testsuite_testcase_dict):
-        print('Getting testmodule testsuite information')
         testsuite_list = testsuite_testcase_dict.keys()
         testmodule_testsuite_dict = {}
         for testsuite in testsuite_list:
@@ -62,7 +70,6 @@ class StoreAuto(object):
         return testmodule_testsuite_dict
 
     def get_testcase_failed_or_error_logs_dictionary(self, log_file, testcase_status_dict):
-        print('Getting testcase failed or error log from %s' % log_file)
         oeqalogparser = OeqaLogParser()
         testcase_list = testcase_status_dict.keys()
         testcase_failed_or_error_logs_dict = {}
@@ -75,19 +82,27 @@ class StoreAuto(object):
                 testcase_failed_or_error_logs_dict[testcase] = logs
         return testcase_failed_or_error_logs_dict
 
-def main(args):
+def main(args, logger):
+    logger.info('Gathering test result and log data')
     oeqa_logparser = OeqaLogParser()
     testcase_status_dict = oeqa_logparser.get_test_status(args.log_file)
+    logger.debug('Received testcase status dictionary %s' % testcase_status_dict)
 
     store_auto = StoreAuto()
+    logger.debug('Getting test environment and breaking down test result & log data')
     environment_list = store_auto.get_environment_list_for_test_log(args.log_file, args.source, args.environment_list, oeqa_logparser)
+    logger.debug('Received environment list %s' % environment_list)
     testsuite_testcase_dict = store_auto.get_testsuite_testcase_dictionary(args.case_dir)
+    logger.debug('Received testsuite testcase dictionary %s' % testsuite_testcase_dict)
     testmodule_testsuite_dict = store_auto.get_testmodule_testsuite_dictionary(testsuite_testcase_dict)
+    logger.debug('Received testmodule testsuite dictionary %s' % testmodule_testsuite_dict)
     test_logs_dict = store_auto.get_testcase_failed_or_error_logs_dictionary(args.log_file, testcase_status_dict)
+    logger.debug('Received test logs dictionary %s' % test_logs_dict)
 
     gitstore = GitStore()
+    logger.info('Storing test result and log data')
     gitstore.smart_create_update_automated_test_result(args.git_repo, args.git_branch, args.component, environment_list, testmodule_testsuite_dict,
-                                                       testsuite_testcase_dict, testcase_status_dict, test_logs_dict)
+                                                       testsuite_testcase_dict, testcase_status_dict, test_logs_dict, logger)
     return 0
 
 def register_commands(subparsers):

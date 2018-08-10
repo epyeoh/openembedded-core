@@ -1,3 +1,16 @@
+# test case management tool - store test result to git repository
+#
+# Copyright (c) 2018, Intel Corporation.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms and conditions of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
 import tempfile
 import os
 import pathlib
@@ -78,12 +91,12 @@ class GitStore(object):
                 d = os.path.join(destination_dir, item)
                 shutil.copy2(s, d)
 
-    def _load_test_module_file_with_json_into_dictionary(self, file):
+    def _load_test_module_file_with_json_into_dictionary(self, file, logger):
         if os.path.exists(file):
             with open(file, "r") as f:
                 return json.load(f)
         else:
-            print('Cannot find file (%s)' % file)
+            logger.error('Cannot find file (%s)' % file)
             return None
 
     def _get_testcase_log_need_removal_list(self, testcase, cur_testcase_status, next_testcase_status, testcase_log_remove_list):
@@ -108,22 +121,21 @@ class GitStore(object):
             if os.path.exists(file_remove_path):
                 os.remove(file_remove_path)
 
-    def _check_if_dir_contain_project_and_environment_directory(self, git_dir, project, environment_list):
-        project_env_dir = self._get_project_environment_directory(git_dir, project, environment_list)
-        completed_process = subprocess.run(["ls", project_env_dir])
-        if completed_process.returncode == 0:
+    def _check_if_dir_contain_project_and_environment_directory(self, dir, project, environment_list):
+        project_env_dir = self._get_project_environment_directory(dir, project, environment_list)
+        if os.path.exists(project_env_dir):
             return True
         else:
             return False
 
-    def _git_init(self, git_dir):
+    def _git_init(self, git_repo):
         try:
-            repo = GitRepo(git_dir, is_topdir=True)
+            repo = GitRepo(git_repo, is_topdir=True)
         except GitError:
             print("Non-empty directory that is not a Git repository "
                    "at {}\nPlease specify an existing Git repository, "
                    "an empty directory or a non-existing directory "
-                   "path.".format(git_dir))
+                   "path.".format(git_repo))
         return repo
 
     def _run_git_cmd(self, repo, cmd):
@@ -133,12 +145,13 @@ class GitStore(object):
         except GitError:
             return False, None
 
-    def _check_if_git_dir_and_git_branch_exist(self, git_dir, git_branch):
-        completed_process = subprocess.run(["ls", '%s/.git' % git_dir])
-        if not completed_process.returncode == 0:
+    def _check_if_git_repo_and_git_branch_exist(self, git_repo, git_branch):
+        git_dir = '%s/.git' % git_repo
+        if not os.path.exists(git_dir):
             return False
-        repo = self._git_init(git_dir)
-        return self._git_checkout_git_repo(repo, git_branch)[0]
+        repo = self._git_init(git_repo)
+        status, output = self._git_checkout_git_repo(repo, git_branch)
+        return status
 
     def _git_checkout_git_repo(self, repo, git_branch):
         cmd = 'checkout %s' % git_branch
@@ -174,27 +187,27 @@ class GitStore(object):
     def _push_testsuite_testcase_json_file_to_git_repo(self, file_dir, git_repo, git_branch):
         return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo, "-b", git_branch])
 
-    def _create_automated_test_result_from_empty_git(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
+    def _create_automated_test_result_from_empty_git(self, git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
                                                      testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict):
         workspace_dir = self._create_temporary_workspace_dir()
         project_env_dir = self._create_project_environment_directory_structure(workspace_dir, project, environment_list)
         self._create_testmodule_and_test_log_files_to_directory(project_env_dir, testmodule_testsuite_dict, testsuite_testcase_dict,
                                                                 testcase_status_dict, testcase_logs_dict)
-        self._push_testsuite_testcase_json_file_to_git_repo(workspace_dir, git_dir, git_branch)
+        self._push_testsuite_testcase_json_file_to_git_repo(workspace_dir, git_repo, git_branch)
         self._remove_temporary_workspace_dir(workspace_dir)
 
-    def _create_automated_test_result_from_existing_git(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
+    def _create_automated_test_result_from_existing_git(self, git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
                                                         testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict):
-        project_env_dir = self._create_project_environment_directory_structure(git_dir, project, environment_list)
+        project_env_dir = self._create_project_environment_directory_structure(git_repo, project, environment_list)
         self._create_testmodule_and_test_log_files_to_directory(project_env_dir, testmodule_testsuite_dict, testsuite_testcase_dict,
                                                                 testcase_status_dict, testcase_logs_dict)
-        self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
+        self._push_testsuite_testcase_json_file_to_git_repo(git_repo, git_repo, git_branch)
 
     def _load_testmodule_file_and_update_test_result(self, project_env_dir, testmodule_testsuite_dict, testsuite_testcase_dict,
-                                                     testcase_status_dict, testcase_logs_dict, testcase_log_remove_list):
+                                                     testcase_status_dict, testcase_logs_dict, testcase_log_remove_list, logger):
         for testmodule in self._get_testmodule_list(testmodule_testsuite_dict):
             testmodule_file = os.path.join(project_env_dir, '%s.json' % testmodule)
-            target_testresult_dict = self._load_test_module_file_with_json_into_dictionary(testmodule_file)
+            target_testresult_dict = self._load_test_module_file_with_json_into_dictionary(testmodule_file, logger)
             testsuite_list = testmodule_testsuite_dict[testmodule]
             self._update_target_testresult_dictionary_with_status(target_testresult_dict, testsuite_list, testsuite_testcase_dict,
                                                                   testcase_status_dict, testcase_log_remove_list)
@@ -202,38 +215,36 @@ class GitStore(object):
             testcase_list = self._get_testcase_list(testsuite_list, testsuite_testcase_dict)
             self._write_test_log_files_for_list_of_testcase(project_env_dir, testcase_list, testcase_logs_dict)
 
-    def _update_automated_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
-                                      testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict):
-        print('Updating test result for environment list: %s' % environment_list)
-        repo = self._git_init(git_dir)
+    def _update_automated_test_result(self, git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
+                                      testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict, logger):
+        repo = self._git_init(git_repo)
         self._git_checkout_git_repo(repo, git_branch)
-        project_env_dir = self._get_project_environment_directory(git_dir, project, environment_list)
+        project_env_dir = self._get_project_environment_directory(git_repo, project, environment_list)
         testcase_log_remove_list = []
         self._load_testmodule_file_and_update_test_result(project_env_dir, testmodule_testsuite_dict, testsuite_testcase_dict,
-                                                          testcase_status_dict, testcase_logs_dict, testcase_log_remove_list)
+                                                          testcase_status_dict, testcase_logs_dict, testcase_log_remove_list, logger)
         self._remove_test_log_files(project_env_dir, testcase_log_remove_list)
-        self._push_testsuite_testcase_json_file_to_git_repo(git_dir, git_dir, git_branch)
+        self._push_testsuite_testcase_json_file_to_git_repo(git_repo, git_repo, git_branch)
 
-    def smart_create_update_automated_test_result(self, git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
-                                                  testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict):
-        print('Creating/Updating test result for environment list: %s' % environment_list)
-        if self._check_if_git_dir_and_git_branch_exist(git_dir, git_branch):
-            repo = self._git_init(git_dir)
+    def smart_create_update_automated_test_result(self, git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
+                                                  testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict, logger):
+        logger.debug('Creating/Updating test result for environment list: %s' % environment_list)
+        if self._check_if_git_repo_and_git_branch_exist(git_repo, git_branch):
+            repo = self._git_init(git_repo)
             self._git_checkout_git_repo(repo, git_branch)
-            print('Found git_dir and git_branch: %s %s' % (git_dir, git_branch))
-            print('Entering git_dir: %s' % git_dir)
-            if self._check_if_dir_contain_project_and_environment_directory(git_dir, project, environment_list):
-                print('Found project and environment inside git_dir: %s' % git_dir)
-                print('Updating test result')
-                self._update_automated_test_result(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
-                                                   testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
+            logger.debug('Found existing git repository and git branch: %s %s' % (git_repo, git_branch))
+            if self._check_if_dir_contain_project_and_environment_directory(git_repo, project, environment_list):
+                logger.debug('Found existing project and environment directory inside: %s' % git_repo)
+                logger.debug('Updating test result and log files')
+                self._update_automated_test_result(git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
+                                                   testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict, logger)
             else:
-                print('Could not find project and environment inside git_dir: %s' % git_dir)
-                print('Creating project and environment inside git_dir: %s' % git_dir)
-                self._create_automated_test_result_from_existing_git(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
+                logger.debug('Could not find project and environment directory inside: %s' % git_repo)
+                logger.debug('Creating project & environment directory and test result & log files inside: %s' % git_repo)
+                self._create_automated_test_result_from_existing_git(git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
                                                                      testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)
         else:
-            print('Could not find git_dir or git_branch: %s %s' % (git_dir, git_branch))
-            print('Creating git_dir, git_branch, project, and environment: %s' % git_dir)
-            self._create_automated_test_result_from_empty_git(git_dir, git_branch, project, environment_list, testmodule_testsuite_dict,
+            logger.debug('Could not find git repository and git branch: %s %s' % (git_repo, git_branch))
+            logger.debug('Creating git repository, git branch, project & environment directory and test result & log files inside: %s' % git_repo)
+            self._create_automated_test_result_from_empty_git(git_repo, git_branch, project, environment_list, testmodule_testsuite_dict,
                                                               testsuite_testcase_dict, testcase_status_dict, testcase_logs_dict)

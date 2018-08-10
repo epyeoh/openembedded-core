@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+#
+# test case management tool - store test result and log
+#
 # As part of the initiative to provide LITE version Test Case Management System
 # with command-line and plain-text files (eg. manual test case file, test plan
 # file to specify list of test case to be executed, test result and log file)
@@ -8,19 +11,42 @@
 # 2. (Future) To view text-based test summary report
 # 3. (Future) To enable planning of test cases for execution and track its completion
 #
+# To look for help information.
+#    $ test-result-log
+#
+# To store test result for OEQA automated testcase, execute the below
+#    $ test-result-log store-auto <folder-to-store> <git-branch> /
+#      <oeqa-log-file-location> <type-of-oeqa-testcase-executed>
+#
+# Copyright (c) 2018, Intel Corporation.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms and conditions of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+
 import os
 import sys
 import argparse
+import logging
 script_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = script_path + '/lib'
 sys.path = sys.path + [lib_path]
 import argparse_oe
+import scriptutils
 import testresultlog.storeauto
+logger = scriptutils.logger_create('test-result-log')
 
 def _get_git_dir(git_dir):
     base_path = script_path + '/..'
     if git_dir == 'default':
         git_dir = os.path.join(base_path, 'test-result-log.git')
+    logger.debug('Set git_dir argument: %s' % git_dir)
     return git_dir
 
 def _get_oeqa_case_dir(oe_dir, source):
@@ -32,6 +58,7 @@ def _get_oeqa_case_dir(oe_dir, source):
         case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdk/cases')
     else:
         case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdkext/cases')
+    logger.debug('Set case_dir argument: %s' % case_dir)
     return case_dir
 
 def _get_default_attribute_value(attribute_value):
@@ -41,11 +68,8 @@ def _get_default_attribute_value(attribute_value):
 
 def _set_args_attribute_default_value(args):
     if getattr(args, "environment_list", False):
-        print('Found environment_list attribute')
+        logger.debug('Setting environment_list argument to default')
         args.environment_list = _get_default_attribute_value(args.environment_list)
-    if getattr(args, "git_remote", False):
-        print('Found git_remote attribute')
-        args.git_remote = _get_default_attribute_value(args.git_remote)
 
 def main():
     parser = argparse_oe.ArgumentParser(description="OpenEmbedded testcase management tool, to store test result then to view test summary report.",
@@ -53,11 +77,18 @@ def main():
                                         epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
                         help='show this help message and exit')
+    parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
+    parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
     subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
     subparsers.required = True
     subparsers.add_subparser_group('store', 'Store test result', 100)
     testresultlog.storeauto.register_commands(subparsers)
     args = parser.parse_args()
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    elif args.quiet:
+        logger.setLevel(logging.ERROR)
+
     if getattr(args, "git_repo", False):
         args.git_repo = _get_git_dir(args.git_repo)
     if getattr(args, "source", False):
@@ -66,7 +97,7 @@ def main():
     _set_args_attribute_default_value(args)
 
     try:
-        ret = args.func(args)
+        ret = args.func(args, logger)
     except argparse_oe.ArgumentUsageError as ae:
         parser.error_subcommand(ae.message, ae.subcommand)
     return ret
