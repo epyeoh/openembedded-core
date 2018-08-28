@@ -42,34 +42,28 @@ import scriptutils
 import testresultlog.storeauto
 logger = scriptutils.logger_create('test-result-log')
 
-def _get_git_dir(git_dir):
-    base_path = script_path + '/..'
-    if git_dir == 'default':
-        git_dir = os.path.join(base_path, 'test-result-log.git')
-    logger.debug('Set git_dir argument: %s' % git_dir)
-    return git_dir
+def _set_default_arg_value_for_git_dir_(args):
+    # check if argument, git_dir, exist in the argparse from the specific subcommand
+    if hasattr(args, "git_repo"):
+        if args.git_repo == '':
+            base_path = script_path + '/..'
+            args.git_repo = os.path.join(base_path, 'test-result-log.git')
+        logger.debug('Set git_dir argument: %s' % args.git_repo)
 
-def _get_oeqa_case_dir(oe_dir, source):
-    if source == 'runtime':
-        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/runtime/cases')
-    elif source == 'selftest':
-        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/selftest/cases')
-    elif source == 'sdk':
-        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdk/cases')
-    else:
-        case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdkext/cases')
-    logger.debug('Set case_dir argument: %s' % case_dir)
-    return case_dir
-
-def _get_default_attribute_value(attribute_value):
-    if attribute_value == 'default':
-        attribute_value = ''
-    return attribute_value
-
-def _set_args_attribute_default_value(args):
-    if getattr(args, "environment_list", False):
-        logger.debug('Setting environment_list argument to default')
-        args.environment_list = _get_default_attribute_value(args.environment_list)
+def _set_default_arg_value_for_case_dir(args):
+    # check if argument, source, exist in the argparse from the specific subcommand
+    if hasattr(args, "source"):
+        oe_dir = script_path + '/..'
+        if args.source == 'runtime':
+            case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/runtime/cases')
+        elif args.source == 'selftest':
+            case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/selftest/cases')
+        elif args.source == 'sdk':
+            case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdk/cases')
+        else:
+            case_dir = os.path.join(oe_dir, 'meta/lib/oeqa/sdkext/cases')
+        args.case_dir = case_dir
+        logger.debug('Set case_dir argument: %s' % args.case_dir)
 
 def main():
     parser = argparse_oe.ArgumentParser(description="OpenEmbedded testcase management tool, to store test result then to view test summary report.",
@@ -89,12 +83,8 @@ def main():
     elif args.quiet:
         logger.setLevel(logging.ERROR)
 
-    if getattr(args, "git_repo", False):
-        args.git_repo = _get_git_dir(args.git_repo)
-    if getattr(args, "source", False):
-        oe_dir = script_path + '/..'
-        args.case_dir = _get_oeqa_case_dir(oe_dir, args.source)
-    _set_args_attribute_default_value(args)
+    _set_default_arg_value_for_git_dir_(args)
+    _set_default_arg_value_for_case_dir(args)
 
     try:
         ret = args.func(args, logger)

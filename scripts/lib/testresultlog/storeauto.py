@@ -82,7 +82,7 @@ class StoreAuto(object):
                 testcase_failed_or_error_logs_dict[testcase] = logs
         return testcase_failed_or_error_logs_dict
 
-def main(args, logger):
+def storeauto(args, logger):
     logger.info('Gathering test result and log data')
     oeqa_logparser = OeqaLogParser()
     testcase_status_dict = oeqa_logparser.get_test_status(args.log_file)
@@ -99,9 +99,9 @@ def main(args, logger):
     test_logs_dict = store_auto.get_testcase_failed_or_error_logs_dictionary(args.log_file, testcase_status_dict)
     logger.debug('Received test logs dictionary %s' % test_logs_dict)
 
-    gitstore = GitStore()
+    git_store = GitStore()
     logger.info('Storing test result and log data')
-    gitstore.smart_create_update_automated_test_result(args.git_repo, args.git_branch, args.component, environment_list, testmodule_testsuite_dict,
+    git_store.smart_create_update_automated_test_result(args.git_repo, args.git_branch, args.component, environment_list, testmodule_testsuite_dict,
                                                        testsuite_testcase_dict, testcase_status_dict, test_logs_dict, logger)
     return 0
 
@@ -110,16 +110,16 @@ def register_commands(subparsers):
     parser_build = subparsers.add_parser('store-auto', help='Store OEQA automated test status & log into git repository',
                                          description='Store OEQA automated test status & log into git repository',
                                          group='store')
-    parser_build.set_defaults(func=main)
+    parser_build.set_defaults(func=storeauto)
     parser_build.add_argument('component', help='Component folder (as the top folder) to store the test status & log')
     parser_build.add_argument('git_branch', help='Git branch to store the test status & log')
     parser_build.add_argument('log_file', help='Full path to the OEQA automated test log file to be used for test result storing')
-    SOURCE = ('runtime', 'selftest', 'sdk', 'sdkext')
-    parser_build.add_argument('source', choices=SOURCE,
+    SOURCES = ('runtime', 'selftest', 'sdk', 'sdkext')
+    parser_build.add_argument('source', choices=SOURCES,
     help='Selected testcase sources to be used for OEQA testcase discovery and testcases discovered will be used as the base testcases for storing test status & log. '
          '"runtime" will search testcase available in meta/lib/oeqa/runtime/cases. '
          '"selftest" will search testcase available in meta/lib/oeqa/selftest/cases. '
          '"sdk" will search testcase available in meta/lib/oeqa/sdk/cases. '
          '"sdkext" will search testcase available in meta/lib/oeqa/sdkext/cases. ')
-    parser_build.add_argument('-g', '--git_repo', default='default', help='(Optional) Full path to the git repository used for storage, default will be <top_dir>/test-result-log.git')
-    parser_build.add_argument('-e', '--environment_list', default='default', help='(Optional) List of environment seperated by comma (",") used to label the test environments for the stored test status & log')
+    parser_build.add_argument('-g', '--git_repo', default='', help='(Optional) Full path to the git repository used for storage, default will be <top_dir>/test-result-log.git')
+    parser_build.add_argument('-e', '--environment_list', default='', help='(Optional) List of environment seperated by comma (",") used to label the test environments for the stored test status & log')
