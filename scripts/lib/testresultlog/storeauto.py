@@ -101,7 +101,7 @@ def storeauto(args, logger):
 
     git_store = GitStore()
     logger.info('Storing test result and log data')
-    git_store.smart_create_update_automated_test_result(args.git_repo, args.git_branch, args.component, environment_list, testmodule_testsuite_dict,
+    git_store.smart_create_update_automated_test_result(args.git_repo, args.git_branch, args.top_folder_name, environment_list, testmodule_testsuite_dict,
                                                        testsuite_testcase_dict, testcase_status_dict, test_logs_dict, logger)
     return 0
 
@@ -111,7 +111,7 @@ def register_commands(subparsers):
                                          description='Store OEQA automated test status & log into git repository',
                                          group='store')
     parser_build.set_defaults(func=storeauto)
-    parser_build.add_argument('component', help='Component folder (as the top folder) to store the test status & log')
+    parser_build.add_argument('top_folder_name', help='Folder name used to create the top folder inside git repository that store the test status & log')
     parser_build.add_argument('git_branch', help='Git branch to store the test status & log')
     parser_build.add_argument('log_file', help='Full path to the OEQA automated test log file to be used for test result storing')
     SOURCES = ('runtime', 'selftest', 'sdk', 'sdkext')
@@ -122,4 +122,4 @@ def register_commands(subparsers):
          '"sdk" will search testcase available in meta/lib/oeqa/sdk/cases. '
          '"sdkext" will search testcase available in meta/lib/oeqa/sdkext/cases. ')
     parser_build.add_argument('-g', '--git_repo', default='', help='(Optional) Full path to the git repository used for storage, default will be <top_dir>/test-result-log.git')
-    parser_build.add_argument('-e', '--environment_list', default='', help='(Optional) List of environment seperated by comma (",") used to label the test environments for the stored test status & log')
+    parser_build.add_argument('-e', '--environment_list', default='', help='(Optional) List of environment separated by comma (",") used to create the subfolder(s) under the top_folder_name to store test status & log')

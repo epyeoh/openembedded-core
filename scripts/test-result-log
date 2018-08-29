@@ -42,7 +42,17 @@ import scriptutils
 import testresultlog.storeauto
 logger = scriptutils.logger_create('test-result-log')
 
-def _set_default_arg_value_for_git_dir_(args):
+def _validate_user_input_arguments(args):
+    if hasattr(args, "top_folder_name"):
+        if '/' in args.top_folder_name:
+            logger.error('top_folder_name argument cannot contain / : %s' % args.top_folder_name)
+            return False
+        if '\\' in r"%r" % args.top_folder_name:
+            logger.error('top_folder_name argument cannot contain \\ : %r' % args.top_folder_name)
+            return False
+    return True
+
+def _set_default_arg_value_for_git_dir(args):
     # check if argument, git_dir, exist in the argparse from the specific subcommand
     if hasattr(args, "git_repo"):
         if args.git_repo == '':
@@ -83,7 +93,9 @@ def main():
     elif args.quiet:
         logger.setLevel(logging.ERROR)
 
-    _set_default_arg_value_for_git_dir_(args)
+    if not _validate_user_input_arguments(args):
+        return -1
+    _set_default_arg_value_for_git_dir(args)
     _set_default_arg_value_for_case_dir(args)
 
     try:
