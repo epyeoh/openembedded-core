@@ -1,0 +1,32 @@
+[
+    {
+        "test": {
+            "@alias": "adt.adt.test_sdk_toolchain_can_runqemu_for_x86",
+            "author": [
+                {
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Prepare kernel, rootfs tar.bz2 image,andqemu configuration \ta. Download kernel, rootfs tar.bz2 image and qemu configuration from public autobuilder webpage\t \tb. Gotohttps://autobuilder.yocto.io/pub/releases//machines/qemu/qemux86/ \tc. Download \t\ti. rootfs tar.bz2: core-image-sato-sdk-qemux86.tar.bz2 \t\tii. kernel: bzImage-qemux86.bin \t\tiii. qemu configuration:core-image-sato-sdk-qemux86.qemuboot.conf",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Download & install sdk toolchain from public autobuilder \ta. Gotohttps://autobuilder.yocto.io/pub/releases//toolchain/x86_64/ \tb. Download poky-glibc-x86_64-core-image-sato-sdk--toolchain-.sh \tc. Run command: poky-glibc-x86_64-core-image-sato-sdk--toolchain-.sh",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "Extract rootfs twice into two images \ta. Run 2 commands below:       runqemu-extract-sdk core-image-sato-sdk-qemux86.tar.bz2qemux86_rootfs_image1       runqemu-extract-sdk core-image-sato-sdk-qemux86.tar.bz2qemux86_rootfs_image2",
+                    "expected_results": ""
+                },
+                "4": {
+                    "action": "From the 2 terminals, start qemu to boot up both two images \ta. Run2 commands below:       runqemu core-image-sato-sdk-qemux86.qemuboot.conf qemux86_rootfs_image1       runqemu core-image-sato-sdk-qemux86.qemuboot.conf qemux86_rootfs_image2",
+                    "expected_results": "Expect qemu to boot up successfully."
+                }
+            },
+            "summary": "test_sdk_toolchain_can_runqemu_for_x86"
+        }
+    }
+]
