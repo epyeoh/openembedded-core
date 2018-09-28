@@ -153,28 +153,33 @@ class OETestResult(_TestResult):
 
     def _get_testcase_result_dict(self):
         testcase_result_dict = {}
+        testcase_testmessage_dict = {}
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
 
             found = False
             desc = None
+            test_msg = ''
             for idx, name in enumerate(self.result_types):
                 (found, msg) = self._isTestResultContainTestCaseWithResultTypeProvided(case, self.result_types[idx])
                 if found:
                     desc = self.result_desc[idx]
+                    test_msg = msg
                     break
 
             if found:
                 testcase_result_dict[case.id()] = desc
+                testcase_testmessage_dict[case.id()] = test_msg
             else:
                 testcase_result_dict[case.id()] = "UNKNOWN"
-        return testcase_result_dict
+        return testcase_result_dict, testcase_testmessage_dict
 
     def logDetailsInJson(self, file_dir):
-        testcase_result_dict = self._get_testcase_result_dict()
-        if len(testcase_result_dict) > 0:
-            jsontresulthelper = OEJSONTestResultHelper(testcase_result_dict)
+        (testcase_result_dict, testcase_testmessage_dict) = self._get_testcase_result_dict()
+        if len(testcase_result_dict) > 0 and len(testcase_testmessage_dict) > 0:
+            jsontresulthelper = OEJSONTestResultHelper(testcase_result_dict, testcase_testmessage_dict)
             jsontresulthelper.write_json_testresult_files_by_testmodule(file_dir)
+            jsontresulthelper.write_testcase_log_files(os.path.join(file_dir, 'logs'))
 
 class OEListTestsResult(object):
     def wasSuccessful(self):
@@ -289,8 +294,9 @@ class OETestRunner(_TestRunner):
         return OEListTestsResult()
 
 class OEJSONTestResultHelper(object):
-    def __init__(self, testcase_result_dict):
+    def __init__(self, testcase_result_dict, testcase_log_dict):
         self.testcase_result_dict = testcase_result_dict
+        self.testcase_log_dict = testcase_log_dict
 
     def get_testcase_list(self):
         return self.testcase_result_dict.keys()
@@ -346,9 +352,9 @@ class OEJSONTestResultHelper(object):
                 testcase_result_dict)
         return json.dumps(testsuite_object, sort_keys=True, indent=4)
 
-    def write_json_testresult_files_by_testmodule(self, json_testresult_dir):
-        if not os.path.exists(json_testresult_dir):
-            pathlib.Path(json_testresult_dir).mkdir(parents=True, exist_ok=True)
+    def write_json_testresult_files_by_testmodule(self, write_dir):
+        if not os.path.exists(write_dir):
+            pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
         testsuite_testcase_dict = self.get_testsuite_testcase_dictionary()
         testmodule_testsuite_dict = self.get_testmodule_testsuite_dictionary(testsuite_testcase_dict)
         for testmodule in testmodule_testsuite_dict.keys():
@@ -356,6 +362,17 @@ class OEJSONTestResultHelper(object):
             json_testsuite = self._create_json_testsuite_string(testsuite_list, testsuite_testcase_dict,
                                                                 self.testcase_result_dict)
             file_name = '%s.json' % testmodule
-            file_path = os.path.join(json_testresult_dir, file_name)
+            file_path = os.path.join(write_dir, file_name)
             with open(file_path, 'w') as the_file:
                 the_file.write(json_testsuite)
+
+    def write_testcase_log_files(self, write_dir):
+        if not os.path.exists(write_dir):
+            pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
+        for testcase in self.testcase_log_dict.keys():
+            test_log = self.testcase_log_dict[testcase]
+            if test_log is not None:
+                file_name = '%s.log' % testcase
+                file_path = os.path.join(write_dir, file_name)
+                with open(file_path, 'w') as the_file:
+                    the_file.write(test_log)
