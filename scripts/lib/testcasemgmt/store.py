@@ -18,7 +18,7 @@ def store(args, logger):
     if len(args.environment_list) > 0:
         env_list = args.environment_list.split(",")
     gitstore = GitStore()
-    gitstore.store_test_result(logger, args.testresult_dir, args.git_repo, args.git_branch, args.top_folder, env_list)
+    gitstore.store_test_result(logger, args.testresult_dir, args.git_repo, args.git_branch, args.top_folder, env_list, args.overwrite_testresult)
     return 0
 
 def register_commands(subparsers):
@@ -33,6 +33,10 @@ def register_commands(subparsers):
                               help='Top folder to be created inside the git repository')
     parser_build.add_argument('git_branch', help='Git branch to store the test result & log')
     parser_build.add_argument('-g', '--git_repo', default='',
-                              help='(Optional) Full path to the git repository used for storage, default will be <top_dir>/test-result-log.git')
+                              help='(Optional) Full path to the git repository used for storage, '
+                                   'default will be <top_dir>/test-result-log.git')
     parser_build.add_argument('-e', '--environment_list', default='',
-                              help='(Optional) List of environment separated by comma (",") used to create the subfolder(s) under the top_folder_name to store test status & log')
+                              help='(Optional) List of environment separated by comma (","),'
+                                   ' used to create the subfolder(s) under the top_folder_name to store test status & log')
+    parser_build.add_argument('-o', '--overwrite_testresult', action='store_true',
+                              help='(Optional) To overwrite existing testresult & log with new data provided')

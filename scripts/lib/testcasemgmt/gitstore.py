@@ -110,22 +110,31 @@ class GitStore(object):
         self._copy_files_from_source_to_destination_dir(logger, source_dir, full_path_dir)
         self._push_testsuite_testcase_json_file_to_git_repo(logger, dest_git_dir, dest_git_dir, git_branch)
 
-    def store_test_result(self, logger, source_dir, dest_git_dir, git_branch, top_folder, sub_folder_list):
+    def store_test_result(self, logger, source_dir, dest_git_dir, git_branch, top_folder, sub_folder_list, overwrite_testresult):
         logger.debug('Initialize storing of test result & log')
         if self._check_if_git_repo_and_git_branch_exist(dest_git_dir, git_branch):
             repo = self._git_init(dest_git_dir)
             self._git_checkout_git_repo(repo, git_branch)
             logger.debug('Found destination git directory and git branch: %s %s' % (dest_git_dir, git_branch))
             if self._check_if_dir_contain_top_dir_and_sub_dirs(dest_git_dir, top_folder, sub_folder_list):
-                logger.debug('Found top directory and sub directories inside: %s' % dest_git_dir)
-                # Check if user would like to overwrite
-                #
-                logger.debug('Skipped storing test result & log inside: %s' % dest_git_dir)
+                logger.debug('Found existing top (%s) & sub (%s) directories inside: %s' %
+                             (top_folder, sub_folder_list, dest_git_dir))
+                if overwrite_testresult:
+                    logger.debug('Overwriting existing top (%s) & sub (%s) directories inside: %s' %
+                                 (top_folder, sub_folder_list, dest_git_dir))
+                    shutil.rmtree(os.path.join(dest_git_dir, top_folder))
+                    self._store_test_result_from_existing_git(logger, source_dir, dest_git_dir, git_branch, top_folder,
+                                                              sub_folder_list)
+                else:
+                    logger.debug('Skipped storing test result & log as it already exist. '
+                                'Specify overwrite if you wish to delete existing testresult and store again.')
             else:
                 logger.debug('Could not find top (%s) & sub (%s) directories inside: %s' %
                              (top_folder, sub_folder_list, dest_git_dir))
-                self._store_test_result_from_existing_git(logger, source_dir, dest_git_dir, git_branch, top_folder, sub_folder_list)
+                self._store_test_result_from_existing_git(logger, source_dir, dest_git_dir, git_branch, top_folder,
+                                                          sub_folder_list)
         else:
             logger.debug('Could not find destination git directory (%s) or git branch (%s)' % (dest_git_dir, git_branch))
-            self._store_test_result_from_empty_git(logger, source_dir, dest_git_dir, git_branch, top_folder, sub_folder_list)
+            self._store_test_result_from_empty_git(logger, source_dir, dest_git_dir, git_branch, top_folder,
+                                                   sub_folder_list)
 
