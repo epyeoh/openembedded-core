@@ -74,8 +74,8 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         parser.add_argument('--machine', required=False, choices=['random', 'all'],
                             help='Run tests on different machines (random/all).')
 
-        parser.add_argument('-ej', '--export-json', action='store_true',
-                            help='Output test result in json format to files.')
+        parser.add_argument('-s', '--skip-export-json', action='store_true',
+                            help='Skip the output test result in json format to files.')
         
         parser.set_defaults(func=self.run)
 
@@ -225,7 +225,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             rc = self.tc.runTests(**self.tc_kwargs['run'])
             rc.logDetails()
             rc.logSummary(self.name)
-            if args.export_json:
+            if not args.skip_export_json:
                 json_result_dir = os.path.join(os.path.dirname(os.path.abspath(args.output_log)),
                                                'json_testresults-%s' % args.test_start_time,
                                                'oe-selftest')
