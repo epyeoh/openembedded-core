@@ -306,6 +306,19 @@ def testimage_main(d):
         bb.fatal('%s - FAILED - tests were interrupted during execution' % pn, forcelog=True)
     results.logDetails()
     results.logSummary(pn)
+    if (d.getVar('OEQA_SKIP_OUTPUT_JSON')) == '1':
+        bb.debug(2, 'Skip the OEQA output json testresult as OEQA_SKIP_OUTPUT_JSON=1')
+    else:
+        workdir = d.getVar("WORKDIR")
+        image_basename = d.getVar("IMAGE_BASENAME")
+        json_result_dir = os.path.join(workdir,
+                                       'temp',
+                                       'json_testresults-%s' % os.getpid(),
+                                       'runtime',
+                                       machine,
+                                       image_basename)
+        results.logDetailsInJson(json_result_dir)
+
     if not results.wasSuccessful():
         bb.fatal('%s - FAILED - check the task log and the ssh log' % pn, forcelog=True)
 
