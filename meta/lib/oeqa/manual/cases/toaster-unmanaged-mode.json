@@ -10,20 +10,20 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Set up yocto project and toaster test environment. cd ${installdir} git clone git://git.yoctoproject.org/poky  ",
-                    "expected_results": "NA "
+                    "action": "Set up yocto project and toaster test environment. \ncd ${installdir} \ngit clone git://git.yoctoproject.org/poky  \n\n",
+                    "expected_results": "NA \n\n"
                 },
                 "2": {
-                    "action": "Start up toaster. cd ${installdir} source poky/oe-init-build-env source toaster start ",
-                    "expected_results": ""
+                    "action": "Start up toaster. \ncd ${installdir} \nsource poky/oe-init-build-env \nsource toaster start  \n\n",
+                    "expected_results": " \nlog: \nThe system will start. \nSyncing... \nCreating tables ... \nCreating table south_migrationhistory \nInstalling custom SQL ... \nInstalling indexes ... \nInstalled 0 object(s) from 0 fixture(s)  \n\nSynced: \n > django.contrib.staticfiles \n > django.contrib.humanize \n > south  \n\nNot synced (use migrations): \n - orm \n(use ./manage.py migrate to migrate these) \nRunning migrations for orm: \n - Migrating forwards to 0004_auto__add_field_package_installed_name. \n > orm:0001_initial \n > orm:0002_auto__add_field_build_timespent \n > orm:0003_timespent \n - Migration 'orm:0003_timespent' is marked for no-dry-run. \n > orm:0004_auto__add_field_package_installed_name \n - Loading initial data for orm. \nInstalled 0 object(s) from 0 fixture(s) \nserver address: 127.0.0.1, server port: 8200 \nSuccessful start.  \n\n"
                 },
                 "3": {
-                    "action": "Build the yocto project. bitbake core-image-minimal ",
-                    "expected_results": ""
+                    "action": "Build the yocto project. \nbitbake core-image-minimal  \n\n",
+                    "expected_results": "Build successfully. \n"
                 },
                 "4": {
-                    "action": "Use a default web brower to see project build process. xdg-open http://localhost:8000/ Wait for build completion.  ",
-                    "expected_results": ""
+                    "action": "Use a default web brower to see project build process. \nxdg-open http://localhost:8000/ \nWait for build completion. \n",
+                    "expected_results": "You can open http://localhost:8000/ in a default browser. The build process is showed. "
                 }
             },
             "summary": "Create_a_Yocto_project_and_start_the_Toaster."
@@ -128,7 +128,7 @@
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Make sure the following table columns have filters. - Outcome -- Started on - Completed on - Failed tasks",
+                    "action": "Make sure the following table columns have filters. \n- Outcome \n-- Started on \n- Completed on \n- Failed tasks",
                     "expected_results": ""
                 },
                 "5": {
@@ -140,7 +140,7 @@
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Have a try in filters of the following table columns. - Outcome - Started on - Completed on - Failed tasks  ",
+                    "action": "Have a try in filters of the following table columns. \n- Outcome \n- Started on \n- Completed on \n- Failed tasks \n",
                     "expected_results": "NA"
                 }
             },
@@ -158,63 +158,63 @@
             ],
             "execution": {
                 "1": {
-                    "action": " === TOASTER: Test Instructions for \"Tasks\", \"Time\", \"CPU Usage\", and \"Disk I/O\" pages ===  NOTE TO TESTERS: The three pages \"Time\", \"CPU Usage\", and \"Disk I/O\" are simple variations on the \"Tasks\" page. Those test instructions will demonstrate the respective unique parts.  ",
+                    "action": " === TOASTER: Test Instructions for \"Tasks\", \"Time\", \"CPU Usage\", and \"Disk I/O\" pages ===   \n \nNOTE TO TESTERS: The three pages \"Time\", \"CPU Usage\", and \"Disk I/O\" are simple variations on the \"Tasks\" page. Those test instructions will demonstrate the respective unique parts.   \n \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".   \n \n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "In Toaster, select the build, and select the \"Tasks\" link in the left sidebar ",
+                    "action": "In Toaster, select the build, and select the \"Tasks\" link in the left sidebar   \n \n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Breadcrumbs   * Observe that the 4 breadcrumbs at the top left are:        : a live link that will take you back to the project page \t:a live link that will take you back to the project Builds page     : a live link that will take you back to the image dashboard page   \"Tasks\"   * Test the breadcrumb live links, return to this page  ",
+                    "action": "Breadcrumbs   \n \n  * Observe that the 4 breadcrumbs at the top left are:   \n     \n                           : a live link that will take you back to the project page  \n                  \t: a live link that will take you back to the project Builds page \n                          : a live link that will take you back to the image dashboard page \n                          \"Tasks\"   \n \n  * Test the breadcrumb live links, return to this page   \n \n \n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "General Layout   * Observe the left-hand box with links to the other pages of the build    * Observe the title of the table is \"Tasks\", in bold    * Observe the search/filter bar above the table    * Observe the number of table rows in each page matches the number selected in the \"Show rows\" dropdown menu    * Observe at the bottom of the page the \"Showing XX to XX out of xxx entries\", the page selection links, and the \"Show Rows\" selection.  ",
+                    "action": "General Layout   \n \n  * Observe the left-hand box with links to the other pages of the build   \n   \n  * Observe the title of the table is \"Tasks\", in bold   \n   \n  * Observe the search/filter bar above the table   \n   \n  * Observe the number of table rows in each page matches the number selected in the \"Show rows\" dropdown menu   \n   \n  * Observe at the bottom of the page the \"Showing XX to XX out of xxx entries\", the page selection links, and the \"Show Rows\" selection.   \n \n \n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "Columns  Note: to restore the default columns in your browser, for example in Firefox, select \"Tools > Privacy > remove individual cookies\", find the cookies for the IP address of the Toaster engine (for example \"localhost\"), and remove each sub-cookie with the prefix \"_displaycols_*\" (or the whole cookie if those are the only sub-cookies).   * Observe that the default columns are:     \"Order, Recipe, Task, Executed, Outcome, Cache attempt\"   * Click the \"Edit Columns\" button.    * Observe that the fields are sorted as follows (with the indicated items greyed)   [ ] CPU usage  [x] Cache attempt  [ ] Disk I/O (ms)  [x] Executed  [x] Order      {greyed}  [x] Outcome  [x] Recipe {greyed}  [ ] Recipe version  [x] Task {greyed}  [ ] Time (secs)    * For each of the greyed items, attempt to click them. Observe that they do not change.   * For each of the non-greyed items, attempt to click them. Observe that the respective column dynamically appears when checked and disappears when un-checked.  ",
+                    "action": "Columns   \n \nNote: to restore the default columns in your browser, for example in Firefox, select \"Tools > Privacy > remove individual cookies\", find the cookies for the IP address of the Toaster engine (for example \"localhost\"), and remove each sub-cookie with the prefix \"_displaycols_*\" (or the whole cookie if those are the only sub-cookies).   \n \n  * Observe that the default columns are:    \n   \n    \"Order, Recipe, Task, Executed, Outcome, Cache attempt\"   \n \n  * Click the \"Edit Columns\" button.   \n   \n  * Observe that the fields are sorted as follows (with the indicated items greyed)   \n \n    [ ] CPU usage  \n    [x] Cache attempt  \n    [ ] Disk I/O (ms)  \n    [x] Executed  \n    [x] Order            {greyed}  \n    [x] Outcome  \n    [x] Recipe           {greyed}  \n    [ ] Recipe version  \n    [x] Task             {greyed}  \n    [ ] Time (secs)    \n \n  * For each of the greyed items, attempt to click them. Observe that they do not change.   \n \n  * For each of the non-greyed items, attempt to click them. Observe that the respective column dynamically appears when checked and disappears when un-checked.   \n \n \n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Search   * Observe that the search text box background text is \"Search tasks\".    * Set the search text to \"busybox\" and click \"Search\". Observe that only the busybox tasks are listed (about 16).    * Click the \"X\" next to the search text box. Observe that all of the tasks re-appear.  ",
+                    "action": "Search   \n \n  * Observe that the search text box background text is \"Search tasks\".   \n   \n  * Set the search text to \"busybox\" and click \"Search\". Observe that only the busybox tasks are listed (about 16).   \n   \n  * Click the \"X\" next to the search text box. Observe that all of the tasks re-appear.   \n \n \n",
                     "expected_results": ""
                 },
                 "8": {
-                    "action": "Column sorts   * Enable all of the columns.    * Observe that by default the \"Order\" column header is in bold, it has a down-arrow icon, and that the table is sorted by this column in ascending order.    * Observe that the columns are in this order, and are sortable only if indicated:    Order {sortable}  Recipe {sortable}  Recipe version  Task {sortable}  Executed {sortable}  Outcome {sortable}  Cache attempt {sortable}  Time (secs) {sortable}  CPU usage {sortable}  Disk I/O (ms) {sortable}      * Test that each of the sortable columns do sort, ascending and descending   * Observe that each of the column headers have a question mark icon, and that hovering over it provides help text.  ",
+                    "action": "Column sorts   \n \n  * Enable all of the columns.   \n   \n  * Observe that by default the \"Order\" column header is in bold, it has a down-arrow icon, and that the table is sorted by this column in ascending order.   \n   \n  * Observe that the columns are in this order, and are sortable only if indicated:   \n   \n    Order                    {sortable}  \n    Recipe                     {sortable}  \n    Recipe version  \n    Task                       {sortable}  \n    Executed                   {sortable}  \n    Outcome                    {sortable}  \n    Cache attempt              {sortable}  \n    Time (secs)                {sortable}  \n    CPU usage                  {sortable}  \n    Disk I/O (ms)              {sortable}   \n     \n     \n  * Test that each of the sortable columns do sort, ascending and descending   \n \n  * Observe that each of the column headers have a question mark icon, and that hovering over it provides help text.   \n \n  \n",
                     "expected_results": ""
                 },
                 "9": {
-                    "action": "\"Executed\" Filter    * Observe that the \"Executed\" column has the filter icon. Click on it and observe these values, where \"All Tasks\" is the default   (*) All Tasks   ( ) Executed Tasks   ( ) Not Executed Tasks    * Click on \"Executed Tasks\" and observe that only rows with the value \"Executed\" are displayed.   * Click on \"Not Executed Tasks\" and observe that only rows with the value \"Not Executed\" are displayed.   * Click on \"All Tasks\" and observe that all rows are displayed.  ",
+                    "action": "\"Executed\" Filter    \n \n  * Observe that the \"Executed\" column has the filter icon. Click on it and observe these values, where \"All Tasks\" is the default   \n \n    (*) All Tasks   \n    ( ) Executed Tasks   \n    ( ) Not Executed Tasks    \n \n  * Click on \"Executed Tasks\" and observe that only rows with the value \"Executed\" are displayed.   \n \n  * Click on \"Not Executed Tasks\" and observe that only rows with the value \"Not Executed\" are displayed.   \n \n  * Click on \"All Tasks\" and observe that all rows are displayed.   \n \n \n",
                     "expected_results": ""
                 },
                 "10": {
-                    "action": "\"Outcome\" Filter    * Observe that the \"Outcome\" column has the filter icon. Click on it and observe these values, where \"All Tasks\" is the default   (*) All Tasks   ( ) Succeeded Tasks   ( ) Failed Tasks   ( ) Cached Tasks   ( ) Prebuilt Tasks   ( ) Covered Tasks   ( ) Empty Tasks    * Click on each of the filter selections, and observe that the resulting row \"Outcome\" values match the selection.   * Click on \"All Tasks\" and observe that all rows are displayed.   1",
+                    "action": "\"Outcome\" Filter    \n \n  * Observe that the \"Outcome\" column has the filter icon. Click on it and observe these values, where \"All Tasks\" is the default   \n \n    (*) All Tasks   \n    ( ) Succeeded Tasks   \n    ( ) Failed Tasks   \n    ( ) Cached Tasks   \n    ( ) Prebuilt Tasks   \n    ( ) Covered Tasks   \n    ( ) Empty Tasks    \n \n  * Click on each of the filter selections, and observe that the resulting row \"Outcome\" values match the selection.    \n \n  * Click on \"All Tasks\" and observe that all rows are displayed.   \n \n \n1",
                     "expected_results": ""
                 },
                 "11": {
-                    "action": "\"Cache attempt\" Filter    * Observe that the \"Cache attempt\" column has the filter icon. Click on it and observe these values, where \"All Tasks\" is the default   (*) All Tasks   ( ) Tasks with cache attempts   ( ) Tasks with 'File not in cache' attempts   ( ) Tasks with 'Failed' cache attempts   ( ) Tasks with 'Succeeded' cache attempts    * Click on each of the filter selections, and observe that the resulting row \"Outcome\" values match the selection.    Note the with a clean build, only the \"All Tasks\" and \"Tasks with cache attempts\" will return rows.   * Click on \"All Tasks\" and observe that all rows are displayed.   1",
+                    "action": "\"Cache attempt\" Filter    \n \n  * Observe that the \"Cache attempt\" column has the filter icon. Click on it and observe these values, where \"All Tasks\" is the default   \n \n    (*) All Tasks   \n    ( ) Tasks with cache attempts   \n    ( ) Tasks with 'File not in cache' attempts   \n    ( ) Tasks with 'Failed' cache attempts   \n    ( ) Tasks with 'Succeeded' cache attempts     \n \n  * Click on each of the filter selections, and observe that the resulting row \"Outcome\" values match the selection.   \n   \n    Note the with a clean build, only the \"All Tasks\" and \"Tasks with cache attempts\" will return rows.  \n \n  * Click on \"All Tasks\" and observe that all rows are displayed.   \n \n \n1",
                     "expected_results": ""
                 },
                 "12": {
-                    "action": "Order, Task, Executed, Outcome, Cache attempt links   * Observe that for a given row, the above values are live links that will both take you to the respective task detail page. Click the back button to return.   * Observe that for a given row the values in \"Recipe\" and \"Recipe version\" are live links that will both take you to the respective recipe details page. Click the back button to return   1",
+                    "action": "Order, Task, Executed, Outcome, Cache attempt links   \n \n  * Observe that for a given row, the above values are live links that will both take you to the respective task detail page. Click the back button to return.  \n\n  * Observe that for a given row the values in \"Recipe\" and \"Recipe version\" are live links that will both take you to the respective recipe details page. Click the back button to return   \n \n \n1",
                     "expected_results": ""
                 },
                 "13": {
-                    "action": "Time Page   * \"In Toaster, select the build, and select the \"Time\" link in the left sidebar   * Observe that the default columns are:     \"Recipe\", \"Task\", \"Executed\", \" Outcome\", \"Time (secs)\"   * Observe that the default sort is \"Time (secs)\", in descending order.    * In the \"Edit Columns\" button, turn on all of the columns.    * Observe that the page now matches the \"Tasks\" page, and passes the same tests.   1",
+                    "action": "Time Page   \n \n  * \"In Toaster, select the build, and select the \"Time\" link in the left sidebar   \n \n  * Observe that the default columns are:    \n   \n    \"Recipe\", \"Task\", \"Executed\", \" Outcome\", \"Time (secs)\"   \n \n  * Observe that the default sort is \"Time (secs)\", in descending order.   \n   \n  * In the \"Edit Columns\" button, turn on all of the columns.   \n   \n  * Observe that the page now matches the \"Tasks\" page, and passes the same tests.   \n \n \n1",
                     "expected_results": ""
                 },
                 "14": {
-                    "action": "CPU Usage Page   * \"In Toaster, select the build, and select the \"CPU Usage\" link in the left sidebar   * Observe that the default columns are:     \"Recipe\", \"Task\", \"Executed\", \"Outcome\", \"CPU Usage\"   * Observe that the default sort is \"CPU Usage\", in descending order.    * In the \"Edit Columns\" button, turn on all of the columns.    * Observe that the page now matches the \"Tasks\" page, and passes the same tests.   1",
+                    "action": "CPU Usage Page   \n \n  * \"In Toaster, select the build, and select the \"CPU Usage\" link in the left sidebar   \n \n  * Observe that the default columns are:    \n   \n    \"Recipe\", \"Task\", \"Executed\", \"Outcome\", \"CPU Usage\"   \n \n  * Observe that the default sort is \"CPU Usage\", in descending order.   \n   \n  * In the \"Edit Columns\" button, turn on all of the columns.   \n   \n  * Observe that the page now matches the \"Tasks\" page, and passes the same tests.   \n \n \n1",
                     "expected_results": ""
                 },
                 "15": {
-                    "action": "Disk I/O Page   * \"In Toaster, select the build, and select the \"Disk I/O\" link in the left sidebar   * Observe that the default columns are:     \"Recipe\", \"Task\", \"Executed\", \"Outcome\", \"Disk I/O (ms)\"   * Observe that the default sort is \"Disk I/O (ms)\", in descending order.    * In the \"Edit Columns\" button, turn on all of the columns.    * Observe that the page now matches the \"Tasks\" page, and passes the same tests.",
+                    "action": "Disk I/O Page   \n  \n   * \"In Toaster, select the build, and select the \"Disk I/O\" link in the left sidebar   \n  \n   * Observe that the default columns are:    \n    \n     \"Recipe\", \"Task\", \"Executed\", \"Outcome\", \"Disk I/O (ms)\"   \n  \n   * Observe that the default sort is \"Disk I/O (ms)\", in descending order.   \n    \n   * In the \"Edit Columns\" button, turn on all of the columns.   \n    \n   * Observe that the page now matches the \"Tasks\" page, and passes the same tests.   </project_name>",
                     "expected_results": "NA"
                 }
             },
@@ -232,7 +232,7 @@
             ],
             "execution": {
                 "1": {
-                    "action": "TOASTER: Test Instructions for \"Package Detail\" page ",
+                    "action": "TOASTER: Test Instructions for \"Package Detail\" page   \n \n",
                     "expected_results": ""
                 },
                 "2": {
@@ -248,27 +248,27 @@
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Breadcrumbs   * Observe that the 3 breadcrumbs at the top left are:   : a live link that will take you back to the image dashboard page  \"Packages\": a live link that will take you back to the Packages page   \"bash\": the name of the current package (not a link)    * Test the breadcrumb live links, return to this page  ",
+                    "action": "Breadcrumbs  \n  * Observe that the 3 breadcrumbs at the top left are:   \n    : a live link that will take you back to the image dashboard page \n    \"Packages\": a live link that will take you back to the Packages page  \n    \"bash\": the name of the current package  (not a link)        \n  * Test the breadcrumb live links, return to this page ",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "General Layout  * Click on any package   * Observe that there is no the left-hand box   * Observe that there is a right-hand box, with information about the package  * Observe the title is the package name and version, in bold   * Observe that, if the package is installed in an image, there is a link to the image(s) the package appears in   * Observe that, if the package is not installed in the image, there are two tab buttons below the title ",
+                    "action": "General Layout \n  * Click on any package \n  * Observe that there is no the left-hand box   \n  * Observe that there is a right-hand box, with information about the package \n  * Observe the title is the package name and version, in bold  \n  * Observe that, if the package is installed in an image, there is a link to the image(s) the package appears in  \n  * Observe that, if the package is not installed in the image, there are two tab buttons below the title ",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Observe that the tab buttons are:   Generated files (2) {highlighted}   Runtime dependencies (4) ",
+                    "action": "Observe that the tab buttons are:  \n    Generated files (2)        {highlighted}  \n    Runtime dependencies (4)  \n",
                     "expected_results": ""
                 },
                 "8": {
-                    "action": "Generated files tab   * Click the \"Generated files\" tab (which should be selected by default)   * Observe that the number of files in the table matches the number in parenthesis after the \"Generated files\" tab title.  * Observe that the columns in the table are \"File\" and \"Size\"   * Observe that the table is sorted by \"File\" in ascending alphabetical order (A to Z). ",
+                    "action": "Generated files tab  \n  * Click the \"Generated files\" tab (which should be selected by default)  \n  * Observe that the number of files in the table matches the number in parenthesis after the \"Generated files\" tab title. \n  * Observe that the columns in the table are \"File\" and \"Size\"  \n  * Observe that the table is sorted by \"File\" in ascending alphabetical order (A to Z). ",
                     "expected_results": ""
                 },
                 "9": {
-                    "action": "Runtime dependencies tab   * Click the \"Runtime dependencies\" tab   * Observe that the number of dependencies in the table matches the number in parenthesis after the \"Runtime dependencies\" tab title.   * Observe that the columns in the table are:   \"Package, Version, Size\"   * Observe that the table is sorted by Package in ascending alphabetical order (A to Z)   * Observe that the package name values are live links to the respective package details page. ",
+                    "action": "Runtime dependencies tab  \n  * Click the \"Runtime dependencies\" tab  \n  * Observe that the number of dependencies in the table matches the number in parenthesis after the \"Runtime dependencies\" tab title.  \n  * Observe that the columns in the table are:  \n    \"Package, Version, Size\"  \n  * Observe that the table is sorted by Package in ascending alphabetical order (A to Z)  \n  * Observe that the package name values are live links to the respective package details page. ",
                     "expected_results": "The information icon was eliminated on the columns that where self explanatory.  "
                 },
                 "10": {
-                    "action": "Package information box   * Observe that there is a right-hand box, with information about the package, including in this example the fields:   \"Size, License, Recipe, Recipe version, Layer, Layer branch, Layer commit\"   * Observe that each of the field has a question mark icon, and that hovering will provide help text.   * Observe that none of the values in the right-hand box are blank   * Observe that the \"Recipe\" value is a live link to the respective recipe detail page.",
+                    "action": "Package information box  \n  * Observe that there is a right-hand box, with information about the package, including in this example the fields:  \n    \"Size, License, Recipe, Recipe version, Layer, Layer branch, Layer commit\"  \n  * Observe that each of the field has a question mark icon, and that hovering will provide help text.  \n  * Observe that none of the values in the right-hand box are blank  \n  * Observe that the \"Recipe\" value is a live link to the respective recipe detail page.  ",
                     "expected_results": ""
                 }
             },
@@ -286,31 +286,31 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".   \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar. ",
+                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar.  \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "Make sure that by default the \"Recipes\" table is sorted by \"Recipe\" in ascending alphabetical order (A to Z). ",
+                    "action": "Make sure that by default the \"Recipes\" table is sorted by \"Recipe\" in ascending alphabetical order (A to Z).  \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Sort my \"Recipes\" table by \"Section\" and then navigate away by selecting a recipe(such as click busybox recipe). When you click \"back\" button in web-browser to go back to the \"Recipes\" table it should still be sorted by \"Section\". ",
+                    "action": "Sort my \"Recipes\" table by \"Section\" and then navigate away by selecting a recipe(such as click busybox recipe). When you click \"back\" button in web-browser to go back to the \"Recipes\" table it should still be sorted by \"Section\".  \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Make sure all column headings are sortable, except \"Recipe version\", \"Dependencies\", \"Reverse dependencies\" and \"Layer commit\". ",
+                    "action": "Make sure all column headings are sortable, except \"Recipe version\", \"Dependencies\", \"Reverse dependencies\" and \"Layer commit\".  \n\n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "Sorting and \"Edit columns\" If you use the \"Edit columns\" menu to hide the column with the applied sorting, we revert the sorting to the default sorting (i.e. \"Recipe\"). The default sorting always uses one of the core columns, which cannot be hidden using the \"Edit columns\" menu. Sort recipes by \"section\" column heading. Then hide \"Section\" column by \"Edit columns\". Make sure that the \"Recipes\" table is sorted by \"Recipe\" in ascending alphabetical order (A to Z). NOTE: Bug 5919 is filed against the issue. ",
+                    "action": "Sorting and \"Edit columns\" \nIf you use the \"Edit columns\" menu to hide the column with the applied sorting, we revert the sorting to the default sorting (i.e. \"Recipe\"). The default sorting always uses one of the core columns, which cannot be hidden using the \"Edit columns\" menu. \nSort recipes by \"section\" column heading. Then hide \"Section\" column by \"Edit columns\". Make sure that the \"Recipes\" table is sorted by \"Recipe\" in ascending alphabetical order (A to Z). \nNOTE: Bug 5919 is filed against the issue.  \n\n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Sorting and search Searching should have no impact on the applied sorting. Any results returned should be sorted by the sorting criteria selected when the search query was submitted. Sort recipes by \"section\" column heading. Input a string (such as \"lib\") in search box and click search button. Make sure results returned should be sorted by \"section\".  ",
+                    "action": "Sorting and search \nSearching should have no impact on the applied sorting. Any results returned should be sorted by the sorting criteria selected when the search query was submitted. \nSort recipes by \"section\" column heading. Input a string (such as \"lib\") in search box and click search button. Make sure results returned should be sorted by \"section\". \n",
                     "expected_results": "NA"
                 }
             },
@@ -328,39 +328,39 @@
             ],
             "execution": {
                 "1": {
-                    "action": "recipes: Search the content of the recipes table ",
+                    "action": "recipes: Search the content of the recipes table  \n\n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".   \n \n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar. ",
+                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar.  \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Observe the search is made of a text input field and a \"Search\" button in a toolbar above the table. ",
+                    "action": "Observe the search is made of a text input field and a \"Search\" button in a toolbar above the table.  \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "When no search query has been entered, we have placeholder text saying: \"Search recipes\". ",
+                    "action": "When no search query has been entered, we have placeholder text saying: \"Search recipes\".  \n\n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "Input \"lib\" in the text input field. The placeholder text disappears when the first character is typed. Click search button. ",
+                    "action": "Input \"lib\" in the text input field. The placeholder text disappears when the first character is typed. Click search button.  \n\n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": " (1) returned results The search string is kept in the text input field. The results returned occur. Click \"Clear search\" icon to clear the search and display all recipes. (2) no results returned If your search query returns no results, the page heading changes to \"No recipes found\", and we show you an alert with a search form and an option to show all recipes. Observe \"show all recipes\" button is available. ",
+                    "action": " \n(1) returned results \nThe search string is kept in the text input field. The results returned occur. Click  \"Clear search\" icon to clear the search and display all recipes. \n(2) no results returned \nIf your search query returns no results, the page heading changes to \"No recipes found\", and we show you an alert with a search form and an option to show all recipes. Observe \"show all recipes\" button is available.  \n\n",
                     "expected_results": ""
                 },
                 "8": {
-                    "action": "When I run a search, the search happens against the following columns (independently of they being shown orhidden): - Recipe - Recipe version - Recipe file - Section - License - Layer - Layer branch - Layer commit  Input a string to search for the above 8 column headings separately to make sure that the search happens against the columns.  8 Search, sorting and \"Edit columns\" Searching does not change the state of the table: the same columns remain hidden and the same sorting applied when search results are displayed, but filters are cleared by the search results. Search a string and make sure that the same columns remain hidden and the same sorting applied. Since filter feature of recipes (4296) is obsolete, we don't have to test filter. ",
+                    "action": "When I run a search, the search happens against the following columns (independently of they being shown or hidden): \n- Recipe \n- Recipe version \n- Recipe file \n- Section \n- License \n- Layer \n- Layer branch \n- Layer commit  \n\nInput a string to search for the above 8 column headings separately to make sure that the search happens against the columns.  \n\n8 Search, sorting and \"Edit columns\"  \nSearching does not change the state of the table: the same columns remain hidden and the same sorting applied when search results are displayed, but filters are cleared by the search results.\nSearch a string and make sure that the same columns remain hidden and the same sorting applied. Since filter feature of recipes (4296) is obsolete, we don't have to test filter.  \n\n",
                     "expected_results": ""
                 },
                 "9": {
-                    "action": "Search and filters The scope of the filters is the content currently on the table (this means all table pages, not only the one displayed). The scope of the search is always the content of the database. Since filter feature of recipes (4296) is obsolete, we don't have to test filter.  If I run a search query, any filter applied afterwards will filter the content returned by the search query.  If I run a search query while a filter is applied, the filter is cleared by the results of the search query (i.e. we display the results of the search query and clear the filter applied beforehand). The same happens if I click the \"Clear search\" icon when a filter is applied to a set of search results (both search results and applied filter are cleared, and the table shows all the tasks). Since filter feature of recipes (4296) is obsolete, we don't have to test filter.   ",
+                    "action": "Search and filters \nThe scope of the filters is the content currently on the table (this means all table pages, not only the one displayed). The scope of the search is always the content of the database.\nSince filter feature of recipes (4296) is obsolete, we don't have to test filter.  \n\nIf I run a search query, any filter applied afterwards will filter the content returned by the search query.  \n\nIf I run a search query while a filter is applied, the filter is cleared by the results of the search query (i.e. we display the results of the search query and clear the filter applied beforehand). The same happens if I click the \"Clear search\" icon when a filter is applied to a set of search results (both search results and applied filter are cleared, and the table shows all the tasks). \nSince filter feature of recipes (4296) is obsolete, we don't have to test filter. \n\n",
                     "expected_results": "NA"
                 }
             },
@@ -378,15 +378,15 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".   \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar. ",
+                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar.  \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "* Observe that the default columns are:   \"Recipe, Recipe version, Recipe file, Section , License, Layer\"    * Click the \"Edit Columns\" button.   * Observe that the fields are sorted as follows (with the indicated items greyed)   [ ] Dependencies   [x] Layer   [ ] Layer branch   [ ] Layer commit   [x] License   [x] Recipe   {greyed}   [x] Recipe file   [x] Recipe version {greyed}   [ ] Reverse dependencies   [x] Section    * For each of the greyed items, attempt to click them. Observe that they do not change.   * For each of the non-greyed items, attempt to click them. Observe that the respective column dynamically appears when checked and disappears when un-checked.  ",
+                    "action": "* Observe that the default columns are:   \n    \"Recipe, Recipe version, Recipe file, Section , License, Layer\"   \n \n  * Click the \"Edit Columns\" button.  \n  * Observe that the fields are sorted as follows (with the indicated items greyed)  \n    [ ] Dependencies  \n    [x] Layer  \n    [ ] Layer branch  \n    [ ] Layer commit  \n    [x] License  \n    [x] Recipe                   {greyed}  \n    [x] Recipe file  \n    [x] Recipe version        {greyed}  \n    [ ] Reverse dependencies  \n    [x] Section    \n \n  * For each of the greyed items, attempt to click them. Observe that they do not change.  \n  * For each of the non-greyed items, attempt to click them. Observe that the respective column dynamically appears when checked and disappears when un-checked.\n",
                     "expected_results": "NA"
                 }
             },
@@ -404,19 +404,19 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".   \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar. ",
+                    "action": "In Toaster, select the build, and select the \"Recipes\" link in the left sidebar.  \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "By default, the all recipes table displays the following columns in this order: (1) Recipe (2) Recipe version: the target version and revision (3)Dependencies(4)Reverse Dependencies (5) License: the value of the target's LICENSE variable (6) Layer: the name of the layer providing the target ",
+                    "action": "By default, the all recipes table displays the following columns in this order: \n(1) Recipe (2) Recipe version: the target version and revision (3) Dependencies (4)Reverse Dependencies  (5) License: the value of the target's LICENSE variable (6) Layer: the name of the layer providing the target  \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "In the \"Edit columns\" menu, table columns appear listed alphabetically. In the table itself, the default order of columns is as follows: (1) Dependencies (2) Layer (3)Layer branch(4)Layer commit(5)License (6)Recipe (7)Recipe file(8)Reverse dependencies (9) Section(10) Version  The minimum table is made of the 2 columns that provide the information needed to identify a target: Recipe and Recipe version.",
+                    "action": "In the \"Edit columns\" menu, table columns appear listed alphabetically. \nIn the table itself, the default order of columns is as follows: \n(1) Dependencies (2) Layer (3) Layer branch (4) Layer commit (5) License (6) Recipe (7) Recipe file  (8) Reverse dependencies (9) Section (10) Version  \n\nThe minimum table is made of the 2 columns that provide the information needed to identify a target: Recipe and Recipe version.",
                     "expected_results": "NA"
                 }
             },
@@ -434,43 +434,43 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Create a default Yocto project (qemux86), and start the Toaster.   $ source poky/oe-init-build-env  $ source toaster start  $ bitbake core-image-minimal  $ http://localhost:8000/ ",
+                    "action": "Create a default Yocto project (qemux86), and start the Toaster.  \n \n  $ source poky/oe-init-build-env \n  $ source toaster start \n  $ bitbake core-image-minimal \n  $ http://localhost:8000/  \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Select the \"core-image-minimal\" build link ",
+                    "action": "Select the \"core-image-minimal\" build link  \n \n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "Select the \"Recipes\" link in the left sidebar  Observe that the recipes are listed in a table, and that each recipe name is a live URL link. ",
+                    "action": "Select the \"Recipes\" link in the left sidebar  \n \nObserve that the recipes are listed in a table, and that each recipe name is a live URL link.  \n \n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Observe that \"Packages\" link. It should have an appended value like \"(4)\". Now click on this link.  Observe:  a) The number of packages matches the previous number in parenthesis.   b) Each package has a version and a size. The size may be zero.   c) Note that if you hover on a package name, it will reveal a URL of the following form. This link should take you to the corresponding package detail page.   localhost:8000/gui/build//package/  ",
+                    "action": "Observe that \"Packages\" link. It should have an appended value like \"(4)\". Now click on this link.  \n \nObserve: \n  a) The number of packages matches the previous number in parenthesis.  \n \n  b) Each package has a version and a size. The size may be zero.  \n \n  c) Note that if you hover on a package name, it will reveal a URL of the following form. This link should take you to the corresponding package detail page.  \n \n        localhost:8000/gui/build//package/   \n \n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Observe that recipes of \"Build Dependencies\" link has an appended value like \"(0)\". Now click on this link.  Observe:  a) No dependencies appear, and you get a message of the form:   \"$RECIPE_NAME_VERSION has no build dependencies.\" ",
+                    "action": "Observe that recipes of \"Build Dependencies\" link has an appended value like \"(0)\". Now click on this link.  \n \nObserve: \n  a) No dependencies appear, and you get a message of the form:  \n \n  \"$RECIPE_NAME_VERSION has no build dependencies.\"  \n \n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "Observe that \"Reverse build dependencies\" link has an appended value like \"(1)\". Now click on this link.  Observe:  a) The number of packages matches the previous number in parenthesis.   b) The recipe dependency should be \"packagegroup-core-boot\",   c) There should be a respective version displayed, for example \"1.0-r11\"   d) If you hover on the recipe name, it will reveal a URL of the following form. This link should take you to the corresponding recipe detail page.   localhost:8000/gui/build//recipe/ ",
+                    "action": "Observe that \"Reverse build dependencies\" link has an appended value like \"(1)\". Now click on this link.  \n \nObserve: \n  a) The number of packages matches the previous number in parenthesis.  \n \n  b) The recipe dependency should be \"packagegroup-core-boot\",  \n \n  c) There should be a respective version displayed, for example \"1.0-r11\"  \n \n  d) If you hover on the recipe name, it will reveal a URL of the following form. This link should take you to the corresponding recipe detail page.  \n \n        localhost:8000/gui/build//recipe/  \n \n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Click the breadcrumb \"Recipes\" at the top, locate the \"gdbm\" recipe, and select it. ",
+                    "action": "Click the breadcrumb \"Recipes\" at the top, locate the \"gdbm\" recipe, and select it.  \n \n",
                     "expected_results": ""
                 },
                 "8": {
-                    "action": "Observe that \"Packages\" link. It should have an appended value like \"(0)\". Now click on this link.  Observe:  a) No packages appear, and you get a message of the form:   \"$PACKAGE_NAME_VERSION does not build any packages.\" ",
+                    "action": "Observe that \"Packages\" link. It should have an appended value like \"(0)\". Now click on this link.  \n \nObserve: \n  a) No packages appear, and you get a message of the form:  \n \n  \"$PACKAGE_NAME_VERSION does not build any packages.\"  \n \n",
                     "expected_results": ""
                 },
                 "9": {
-                    "action": "Observe that \"Build dependencies\" link. It should have an appended value like \"(2)\". Now click on this link.  Observe:  a) The number of build dependencies matches the previous number in parenthesis.   b) The recipe dependency should have values like \"gettext-native\" and \"libtool-cross\".   c) There should be a respective versions displayed for each dependency.   d) If you hover on a recipe name, it will reveal a URL of the following form. This link should take you to the corresponding recipe detail page.   localhost:8000/gui/build//recipe/  1",
+                    "action": "Observe that \"Build dependencies\" link. It should have an appended value like \"(2)\". Now click on this link.  \n \nObserve: \n  a) The number of build dependencies matches the previous number in parenthesis.  \n \n  b) The recipe dependency should have values like \"gettext-native\" and \"libtool-cross\".  \n \n  c) There should be a respective versions displayed for each dependency.  \n \n  d) If you hover on a recipe name, it will reveal a URL of the following form. This link should take you to the corresponding recipe detail page.  \n \n        localhost:8000/gui/build//recipe/  \n \n1",
                     "expected_results": ""
                 },
                 "10": {
-                    "action": "Observe that \"Reverse build dependencies\" link. It should have an appended value like \"(0)\". Now click on this link.  Observe:  a) No reverse dependencies appear, and you get a message of the form:   \"$RECIPE_NAME_VERSION does not build any packages.",
+                    "action": "Observe that \"Reverse build dependencies\" link. It should have an appended value like \"(0)\". Now click on this link.  \n \nObserve: \n  a) No reverse dependencies appear, and you get a message of the form:  \n \n  \"$RECIPE_NAME_VERSION does not build any packages.",
                     "expected_results": "NA"
                 }
             },
@@ -488,39 +488,39 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".   \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"Configuration\" link in the left sidebar. Then click \"BitBake variables\" tab. ",
+                    "action": "In Toaster, select the build, and select the \"Configuration\" link in the left sidebar. Then click \"BitBake variables\" tab.  \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "When no search query has been entered, we have placeholder text saying: \"Search BitBake variables\".  ",
+                    "action": "When no search query has been entered, we have placeholder text saying: \"Search BitBake variables\".   \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Input \"lib\" in text input field. The placeholder text disappears when the first character is typed. Click search button. ",
+                    "action": "Input \"lib\" in text input field. The placeholder text disappears when the first character is typed. Click search button.  \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Observe \"4 variables found\" is showed. (It may be other number.)   If your search query returns no results, we display an alert with:  - A h3 heading saying: \"No variables found\"  - A search box  - The search query is showed in the text input shield.  - A link to show all variables. we show the variables table. ",
+                    "action": "Observe \"4 variables found\" is showed. (It may be other number.)  \n  If your search query returns no results, we display an alert with: \n    - A h3 heading saying: \"No variables found\" \n    - A search box \n    - The search query is showed in the text input shield. \n    - A link to show all variables. we show the variables table.  \n\n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "We provide a \"Clear search\" icon (icon-remove-sign). Click it to clear the search and display all variables. Check that the \"Clear search\" icon cannot be accessed using the tab key.  ",
+                    "action": "We provide a \"Clear search\" icon (icon-remove-sign). Click it to clear the search and display all variables. Check that the \"Clear search\" icon cannot be accessed using the tab key.   \n\n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Verify search scope. When I run a search, the search happens against the following columns (independently of they being shown or hidden): - Variable - Value - Set in file - Description ",
+                    "action": "Verify search scope. \nWhen I run a search, the search happens against the following columns (independently of they being shown or hidden): \n- Variable \n- Value \n- Set in file \n- Description  \n\n",
                     "expected_results": ""
                 },
                 "8": {
-                    "action": "Verify \"search, sorting and 'Edit columns'\" Searching does not change the state of the table: the same columns remain hidden and the same sorting applied when search results are displayed, but filters are cleared by the search results. ",
+                    "action": "Verify \"search, sorting and 'Edit columns'\" \nSearching does not change the state of the table: the same columns remain hidden and the same sorting applied \nwhen search results are displayed, but filters are cleared by the search results.  \n\n",
                     "expected_results": ""
                 },
                 "9": {
-                    "action": "Search and filters If I run a search query, any filter applied afterwards will filter the content returned by the search query. If I run a search query while a filter is applied, the filter is cleared by the results of the search query.  ",
+                    "action": "Search and filters \nIf I run a search query, any filter applied afterwards will filter the content returned by the search query. \nIf I run a search query while a filter is applied, the filter is cleared by the results of the search query. \n",
                     "expected_results": "NA"
                 }
             },
@@ -538,23 +538,23 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"Configuration\" link in the left sidebar. Then click \"BitBake variables\" tab. ",
+                    "action": "In Toaster, select the build, and select the \"Configuration\" link in the left sidebar. Then click \"BitBake variables\" tab. \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "By default, the \"variables\" table is sorted by \"Variable\" in ascending alphabetical order (A to Z). ",
+                    "action": "By default, the \"variables\" table is sorted by \"Variable\" in ascending alphabetical order (A to Z). \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Make sure that \"Variable\" column is sortable (Developers have disabled sort function of all other columns to avoid bug 6004) ",
+                    "action": "Make sure that \"Variable\" column is sortable (Developers have disabled sort function of all other columns to avoid bug 6004) \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Sorting and search Searching should have no impact on the applied sorting. Any results returned should be sorted by the sorting criteria selected when the search query was submitted.",
+                    "action": "Sorting and search \nSearching should have no impact on the applied sorting. Any results returned should be sorted by the sorting criteria selected when the search query was submitted.",
                     "expected_results": "NA"
                 }
             },
@@ -816,11 +816,15 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". ",
+                    "action": "\n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Make sure that layer information is shown in: * recipes table  All builds-> core-image-minimal-> recipes  Select \"Layer\", \"Layer branch\", \"Layer commit\" in Edit columns and observe the 3 columns are showed. Note that the \"Layer branch\" column can be empty.   * recipe details   All builds-> core-image-minimal-> recipes  Click a recipe and you can see \"Layer\", \"Layer branch\", \"Layer commit\", \"Recipe details\" information. Note that \"Layer branch\" is not required. If there is no layer branch, you should not see the \"Layer branch\" item on the list.  * built packages table  All builds-> core-image-minimal-> packages  Select \"Layer\", \"Layer branch\", \"Layer commit\" in Edit columns and observer the 3 columns is showed. Note that the \"Layer branch\" column can be empty.   * built package details  All builds-> core-image-minimal-> packages  Click a package and you can see \"Layer\", \"Layer branch\", \"Layer commit\" in package information. Note that \"Layer branch\" is not required. If there is no layer branch, you should not see the \"Layer branch\" item on the list.  * image information   All builds-> core-image-minimal-> core-image-minimal(images)  Select \"Layer\", \"Layer branch\", \"Layer commit\" in Edit columns and observer the 3 columns is showed. Note that the \"Layer branch\" column can be empty.   * installed package details  All builds-> core-image-minimal-> core-image-minimal(images)  Click a package and you can see layer information in package information. Note that \"Layer branch\" is not required. If there is no layer branch, you should not see the \"Layer branch\" item on the list.  * configuration  All builds-> core-image-minimal-> Configuration  You can see \"Layer\", \"Layer branch\", \"Layer commit\" in configuration summary. Note that the \"Layer branch\" column can be empty.  * build dashboard  All builds-> core-image-minimal  You can see \"Layers\" in build summary.   ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". \n\n",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "Make sure that layer information is shown in: \n* recipes table \n    All builds-> core-image-minimal-> recipes \n    Select \"Layer\", \"Layer branch\", \"Layer commit\" in Edit columns and observe the 3 columns are showed. Note that the \"Layer branch\" column can be empty.   \n\n* recipe details  \n    All builds-> core-image-minimal-> recipes \n    Click a recipe and you can see \"Layer\", \"Layer branch\", \"Layer commit\", \"Recipe details\" information.  Note that \"Layer branch\" is not required. If there is no layer branch, you should not see the \"Layer branch\" item on the list.  \n\n* built packages table \n    All builds-> core-image-minimal-> packages \n    Select \"Layer\", \"Layer branch\", \"Layer commit\"  in Edit columns and observer the 3 columns is showed. Note that the \"Layer branch\" column can be empty.   \n\n* built package details \n    All builds-> core-image-minimal-> packages \n    Click a package and you can see \"Layer\", \"Layer branch\", \"Layer commit\" in package information. Note that \"Layer branch\" is not required. If there is no layer branch, you should not see the \"Layer branch\" item on the list.  \n\n* image information \n     All builds-> core-image-minimal-> core-image-minimal(images) \n    Select \"Layer\", \"Layer branch\", \"Layer commit\" in Edit columns and observer the 3 columns is showed. Note that the \"Layer branch\" column can be empty.   \n\n* installed package details \n    All builds-> core-image-minimal-> core-image-minimal(images) \n    Click a package and you can see layer information in package information. Note that \"Layer branch\" is not required. If there is no layer branch, you should not see the \"Layer branch\" item on the list.  \n\n* configuration \n    All builds-> core-image-minimal-> Configuration \n    You can see \"Layer\", \"Layer branch\", \"Layer commit\"  in configuration summary. Note that the \"Layer branch\" column can be empty.  \n\n* build dashboard \n    All builds-> core-image-minimal \n    You can see \"Layers\" in build summary.  \n\n",
                     "expected_results": "NA"
                 }
             },
@@ -956,23 +960,23 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"Configuration\" link in the left sidebar. Then click \"BitBake variables\" tab. ",
+                    "action": "In Toaster, select the build, and select the \"Configuration\" link in the left sidebar. Then click \"BitBake variables\" tab. \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "Observe \"Set in file\" and \"Description\" columns have filters. ",
+                    "action": "Observe \"Set in file\" and \"Description\" columns have filters. \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Filters are mutually exclusive. Only one column filter can be applied to a table at any given time. ",
+                    "action": "Filters are mutually exclusive. Only one column filter can be applied to a table at any given time.  \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Filters are overridden by search. The scope of the filters is the content currently on the table. The scope of the search is always the full content of the database. So: - if I run a search query, any filter applied afterwards will filter the content returned by the search query. Search a string and apply a filter. Observe it would filter the content returned by the search query.  - if I run a search query while a filter is applied, the filter is overridden by the results of the search query. Apply a filter and search a string. Observe that the previous filtered result is overridden by the search.",
+                    "action": "Filters are overridden by search. \nThe scope of the filters is the content currently on the table. \nThe scope of the search is always the full content of the database. \nSo: \n- if I run a search query, any filter applied afterwards will filter the content returned by the search query. \nSearch a string and apply a filter. Observe it would filter the content returned by the search query.  \n\n- if I run a search query while a filter is applied, the filter is overridden by the results of the search query. \nApply a filter and search a string. Observe that the previous filtered result is overridden by the search. ",
                     "expected_results": "NA"
                 }
             },
@@ -990,31 +994,31 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build, and select the \"core-image-minimal\" link in the left sidebar. ",
+                    "action": "In Toaster, select the build, and select the \"core-image-minimal\" link in the left sidebar.  \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "Observe image information page has 2 tabs: - Packages included: this tab shows a table with all the packages installed in the image. The tab label includes the total number of packages listed in the table and their size. - Directory structure: this tab shows all the files included in the image. ",
+                    "action": "Observe image information page has 2 tabs: \n- Packages included: this tab shows a table with all the packages installed in the image. The tab label includes the total number of packages listed in the table and their size. \n- Directory structure: this tab shows all the files included in the image.  \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "By default, the included packages table displays the following columns in this order: Package, Package version, Size, Dependencies ",
+                    "action": "By default, the included packages table displays the following columns in this order: \nPackage, Package version, Size, Dependencies  \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Apart from the columns shown by default, the following additional columns are also available to users via the \"Edit columns\" menu: Layer, Layer branch, Layer commit, License, Recipe, Recipe version. ",
+                    "action": "Apart from the columns shown by default, the following additional columns are also available to users via the \"Edit columns\" menu: \nLayer, Layer branch, Layer commit, License, Recipe, Recipe version.  \n\n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "The minimum table is made of the 2 columns that provide the information needed to identify a package: Package and Package version. ",
+                    "action": "The minimum table is made of the 2 columns that provide the information needed to identify a package: Package and Package version.  \n\n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "By default, the directory structure table shows the top level directories and files in the file system. The table includes the following columns: Directory/File, Symbolic link to, Source package, Size, Permissions, Owner, Group Open some directories and see files.",
+                    "action": "By default, the directory structure table shows the top level directories and files in the file system.\nThe table includes the following columns: \nDirectory/File, Symbolic link to, Source package, Size, Permissions, Owner, Group \nOpen some directories and see files. ",
                     "expected_results": "NA"
                 }
             },
@@ -1032,31 +1036,31 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\". ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and build \"bitbake core-image-minimal\".  \n \n",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select the build. ",
+                    "action": "In Toaster, select the build.  \n\n",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "A 'Build dashboard' page is showed. The 'Build dashboard' page has two main states: (1) Success state: when the build completes successfully. In the success state, if the build target(s) include an image recipe, the page displays an image content module, and the left navigation has an \"Images\" section at the top. (2) Fail state: when the build fails (shown in this page). In the fail state, the page always displays an errors content module, and the left navigation does not have an \"Images\" section at the top. ",
+                    "action": "A 'Build dashboard' page is showed. \nThe 'Build dashboard' page has two main states: \n(1) Success state: when the build completes successfully. In the success state, if the build target(s) include an image recipe, the page displays an image content module, and the left navigation has an \"Images\" section at the top. \n(2) Fail state: when the build fails (shown in this page). In the fail state, the page always displays an errors content module, and the left navigation does not have an \"Images\" section at the top.  \n\n",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Observe that the page provides access to all information available for the selected build. (1) Images (2) Build: this group provides links to the following pages: Configuration, Tasks, Recipes, Packages (3) Performance: this group provides links to the following pages: Time, CPU usage, Disk I/O ",
+                    "action": "Observe that the page provides access to all information available for the selected build. \n(1) Images \n(2) Build: this group provides links to the following pages: \nConfiguration, Tasks, Recipes, Packages \n(3) Performance: this group provides links to the following pages: \nTime, CPU usage, Disk I/O  \n\n",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "The page heading is made of the build target(s) and the machine, such as \"core-image-minimal qemux86\". If the build has more than one target, they show in ascending alphabetical order (A to Z) both in the page heading and in the \"Images\" section of the left navigation. If the build was successful, there is an image content module for each target that is an image recipe. The modules also show in ascending alphabetical order by target name. ",
+                    "action": "The page heading is made of the build target(s) and the machine, such as \"core-image-minimal qemux86\". If the build has more than one target, they show in ascending alphabetical order (A to Z) both in the page heading and in the \"Images\" section of the left navigation. If the build was successful, there is an image content module for each target that is an image recipe. The modules also show in ascending alphabetical order by target name. \n\n",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "Packages included, total package size, license manifest, image files are included in the images section. ",
+                    "action": "Packages included, total package size, license manifest, image files are included in the images section.  \n\n",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "The information of Machine, Distro, Layers is included in configuration content module of \"Build summary\" section. The information of \"Total number of task\", \"Tasks executed\", \" Tasks not executed\", \"Reuse\" is included in the tasks content module. The information of \"Recipes built\" and \"Packages built\" is included in the \"Recipes&Packages\" content module.",
+                    "action": "The information of Machine, Distro, Layers is included in configuration content module of \"Build summary\" section. \nThe information of \"Total number of task\", \"Tasks executed\", \" Tasks not executed\", \"Reuse\" is included in the tasks content module. \nThe information of \"Recipes built\" and \"Packages built\" is included in the \"Recipes&Packages\" content module. ",
                     "expected_results": "NA"
                 }
             },
@@ -1104,31 +1108,31 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and create 4 builds. a) a successful build with images (bitbake core-image-minimal) b) a successful build without images (bitbake mtools-native) c) a failed build with errors and warnings (run \"bitbake core-image-sato\", then press control+c to terminate the build) ",
+                    "action": "Start with a default Yocto project (qemux86), start the Toaster, and create 4 builds. \na) a successful build with images (bitbake core-image-minimal) \nb) a successful build without images (bitbake mtools-native) \nc) a failed build with errors and warnings (run \"bitbake core-image-sato\", then press control+c to terminate the build)",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "In Toaster, select a core-image-minimal build. ",
+                    "action": "In Toaster, select a core-image-minimal build.",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "Observe that there is a 'Build dashboard' page captured by Toaster. The page does not exist for builds in progress, only for finished builds. The 'Build dashboard' page is made of: a) Breadcrumb b) Navigation   IMAGES: core-image-minimal   BUILD:     Configuration     Tasks     Recipes     Packages   PERFORMANCE:     Time     CPU usage     Disk I/O c) Page heading (core-image-minimal qemux86) d) Section heading (Images, Build summary) e) Build status notification (Completed on xx/xx/xx... Build time:xx:xx:xx) ",
+                    "action": "Observe that there is a 'Build dashboard' page captured by Toaster. The page does not exist for builds in progress, only for finished builds. \nThe 'Build dashboard' page is made of: \na) Breadcrumb \nb) Navigation \n    IMAGES: core-image-minimal \n    BUILD: \n        Configuration \n        Tasks \n        Recipes \n        Packages \n    PERFORMANCE: \n        Time \n        CPU usage \n        Disk I/O \nc) Page heading (core-image-minimal qemux86) \nd) Section heading (Images, Build summary) \ne) Build status notification (Completed on xx/xx/xx... Build time:xx:xx:xx)",
                     "expected_results": ""
                 },
                 "4": {
-                    "action": "Observe \"images\" section is made of the following .a) Heading: core-image-minimal, which links to the \"Packages included\" tab of the image information pageb) Number of packages installed: (packages included xx), which is a link to the \"Packages included\" tab of the image information page c) Total installed package size: xxMB d) License manifest (which is a link to the \"Packages included\" tab of the information page with the following columns showing: \"Package\", \"Package version\", \"License\" and \"Recipe\". We have bug 6079 open for this). Next to the license manifest is the path to the directory where you can find the license manifest file. e) Image files (rootfs file names and rootfs file sizes) ",
+                    "action": "Observe \"images\" section is made of the following \n.\na) Heading: core-image-minimal, which links to the \"Packages included\" tab of the image information page \nb) Number of packages installed: (packages included xx), which is a link to the \"Packages included\" tab of the image information page \nc) Total installed package size: xxMB \nd) License manifest (which is a link to the \"Packages included\" tab of the information page with the following columns showing: \"Package\", \"Package version\", \"License\" and \"Recipe\". We have bug 6079 open for this). Next to the license manifest is the path to the directory where you can find the license manifest file.  \n \ne) Image files (rootfs file names and rootfs file sizes)",
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Observe \"Build summary\" section is made of the following. a) Configuration (which is a link to the configuration page):   Machine   Distro   Layers (sorted in alphabetical order) b) Tasks (which is a link to the tasks page)   Total number of tasks (which is a link to the tasks page)   Tasks executed (which is a link to the tasks page with the tasks executed filter applied)   Tasks not executed (which is a link to the tasks pages with the tasks not executed filter applied)   Reuse c) Note that \"Total number of tasks\" should equal number of \"Tasks executed\" + number of \"Tasks not executed\" d) Recipes (which is a link to the recipes page) & Packages (which is a link to the packages built page)   Number of recipes built (which is a link to the recipes page)   Number of packages built (which is a link to the packages built page) ",
+                    "action": "Observe \"Build summary\" section is made of the following. \na) Configuration (which is a link to the configuration page): \n    Machine \n    Distro \n    Layers (sorted in alphabetical order) \nb) Tasks (which is a link to the tasks page) \n    Total number of tasks (which is a link to the tasks page) \n    Tasks executed (which is a link to the tasks page with the tasks executed filter applied) \n    Tasks not executed (which is a link to the tasks pages with the tasks not executed filter applied)\n    Reuse \nc) Note that \"Total number of tasks\" should equal number of \"Tasks executed\" +  number of \"Tasks not executed\" \nd) Recipes (which is a link to the recipes page) & Packages (which is a link to the packages built page) \n    Number of recipes built (which is a link to the recipes page)  \n \n    Number of packages built (which is a link to the packages built page)",
                     "expected_results": ""
                 },
                 "6": {
-                    "action": "Return to localhost:8000 and select a successful build without images (mtools-native) .Observe the build dashboard for a successful build of a target that is not an image recipe. There is no image content module, and no \"Images\" section in the left navigation. ",
+                    "action": "Return to localhost:8000 and select a successful build without images (mtools-native) \n.\nObserve the build dashboard for a successful build of a target that is not an image recipe. There is no image content module, and no \"Images\" section in the left navigation.",
                     "expected_results": ""
                 },
                 "7": {
-                    "action": "Return to localhost:8000 and select the failed build (core-image-sato). Observe the build dashboard for the failed build. a) the errors content module: This module exists for those builds that throw error(s). It appears immediately below the build status notification. The module has 2 states: \u25aa Expanded (shows number of errors and error content) \u25aa Collapsed (shows only the number of errors) By default, the errors module is in the expanded state. Errors content modules include the following information: (1.1) A heading, which indicates the number of errors thrown by the build, and toggles the module between its 2 states on click. Transitions between states should use a slide up / slide down animation. (1.2) Error(s) content  b) the warning content module: This module exists for those builds that throw warning(s). It is the last content module shown on the build dashboard. The module has 2 states: \u25aa Expanded (shows number of warnings and warning content) \u25aa Collapsed (shows only the number of warnings) By default, the warning module is in the collapsed state. Warnings content modules include the following information: (2.1) A heading, which indicates the number of warnings thrown by the build, and toggles the module between its 2states on click. Transitions between states should use a slide up / slide down animation. (2.2) Warning(s) content",
+                    "action": "Return to localhost:8000 and select the failed build (core-image-sato). Observe the build dashboard for the failed build.  \n \na) the errors content module: \nThis module exists for those builds that throw error(s). It appears immediately below the build status notification. \nThe module has 2 states: \n\u25aa Expanded (shows number of errors and error content) \n\u25aa Collapsed (shows only the number of errors) \nBy default, the errors module is in the expanded state. \nErrors content modules include the following information: \n(1.1) A heading, which indicates the number of errors thrown by the build, and toggles the module between its 2 states on click. Transitions between states should use a slide up / slide down animation. \n(1.2) Error(s) content  \n\nb) the warning content module: \nThis module exists for those builds that throw warning(s). \nIt is the last content module shown on the build dashboard. \nThe module has 2 states: \n\u25aa Expanded (shows number of warnings and warning content) \n\u25aa Collapsed (shows only the number of warnings) \nBy default, the warning module is in the collapsed state. Warnings content modules include the following information: \n(2.1) A heading, which indicates the number of warnings thrown by the build, and toggles the module between its 2 \nstates on click. Transitions between states should use a slide up / slide down animation. \n(2.2) Warning(s) content ",
                     "expected_results": "NA"
                 }
             },
