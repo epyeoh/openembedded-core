@@ -90,17 +90,25 @@ class GitStore(object):
             logger.debug('Copying test result & log from %s to %s' % (source_dir, destination_dir))
             copytree(source_dir, destination_dir)
 
-    def _push_testsuite_testcase_json_file_to_git_repo(self, logger, file_dir, git_repo, git_branch):
+    def _push_testsuite_testcase_json_file_to_git_repo(self, logger, file_dir, git_repo, git_branch, top_dir, sub_dir_list):
         logger.debug('Storing test result & log inside git repository (%s) and branch (%s)'
                      % (git_repo, git_branch))
-        return subprocess.run(["oe-git-archive", file_dir, "-g", git_repo, "-b", git_branch])
+        top_and_sub_dir = self._get_top_dir_to_sub_dirs_path(top_dir, sub_dir_list)
+        commit_msg_subject = 'Store %s from {hostname}' % top_and_sub_dir
+        commit_msg_body = 'top dir: %s\nsub dir list: %s\nhostname: {hostname}' % (top_dir, sub_dir_list)
+        return subprocess.run(["oe-git-archive",
+                               file_dir,
+                               "-g", git_repo,
+                               "-b", git_branch,
+                               "--commit-msg-subject", commit_msg_subject,
+                               "--commit-msg-body", commit_msg_body])
 
     def _store_test_result_from_empty_git(self, logger, source_dir, dest_git_dir, git_branch, top_dir, sub_dir_list):
         workspace_dir = self._create_temporary_workspace_dir()
         full_path_dir = self._get_full_path_to_top_and_sub_dir(workspace_dir, top_dir, sub_dir_list)
         self._make_directories(logger, full_path_dir)
         self._copy_files_from_source_to_destination_dir(logger, source_dir, full_path_dir)
-        self._push_testsuite_testcase_json_file_to_git_repo(logger, workspace_dir, dest_git_dir, git_branch)
+        self._push_testsuite_testcase_json_file_to_git_repo(logger, workspace_dir, dest_git_dir, git_branch, top_dir, sub_dir_list)
         self._remove_temporary_workspace_dir(workspace_dir)
 
     def _store_test_result_from_existing_git(self, logger, source_dir, dest_git_dir, git_branch, top_dir, sub_dir_list):
@@ -108,7 +116,7 @@ class GitStore(object):
         if not self._check_if_dir_contain_top_dir_and_sub_dirs(dest_git_dir, top_dir, sub_dir_list):
             self._make_directories(logger, full_path_dir)
         self._copy_files_from_source_to_destination_dir(logger, source_dir, full_path_dir)
-        self._push_testsuite_testcase_json_file_to_git_repo(logger, dest_git_dir, dest_git_dir, git_branch)
+        self._push_testsuite_testcase_json_file_to_git_repo(logger, dest_git_dir, dest_git_dir, git_branch, top_dir, sub_dir_list)
 
     def store_test_result(self, logger, source_dir, dest_git_dir, git_branch, top_folder, sub_folder_list, overwrite_testresult):
         logger.debug('Initialize storing of test result & log')
@@ -120,7 +128,7 @@ class GitStore(object):
                 logger.debug('Found existing top (%s) & sub (%s) directories inside: %s' %
                              (top_folder, sub_folder_list, dest_git_dir))
                 if overwrite_testresult:
-                    logger.debug('Overwriting existing top (%s) & sub (%s) directories inside: %s' %
+                    logger.debug('Removing and overwriting existing top (%s) & sub (%s) directories inside: %s' %
                                  (top_folder, sub_folder_list, dest_git_dir))
                     shutil.rmtree(os.path.join(dest_git_dir, top_folder))
                     self._store_test_result_from_existing_git(logger, source_dir, dest_git_dir, git_branch, top_folder,
