@@ -1,0 +1,200 @@
+[
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_defconfig",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_defconfig"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_defconfig+fragments",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_defconfig+fragments"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_Applying_patches",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_Applying_patches"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-local-source",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-local-source"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-custom-local-source",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-custom-local-source"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_recipe-space_meta",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki.\n"
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_recipe-space_meta"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_External_source",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_External_source"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_building_external_modules(hello-mod)",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_building_external_modules(hello-mod)"
+        }
+    },
+    {
+        "test": {
+            "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_local_parallel_meta",
+            "author": [
+                {
+                    "email": "francisco.j.pedraza.gonzalez@intel.com",
+                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                }
+            },
+            "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_local_parallel_meta"
+        }
+    }
+]
