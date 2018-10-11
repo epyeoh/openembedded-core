@@ -52,11 +52,37 @@
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Remove USB, and reboot into new installed system.   Note:   If installation was successfully completed and received this message \"\"(sdx): Volume was not properly unmounted...Please run fsck.\"\" ignore it because this was whitelisted according to bug 9652.",
+                    "action": "Remove USB, and reboot into new installed system. \nNote:   If installation was successfully completed and received this message \"\"(sdx): Volume was not properly unmounted...Please run fsck.\"\" ignore it because this was whitelisted according to bug 9652.",
                     "expected_results": ""
                 }
             },
             "summary": "boot_and_install_from_USB"
+        }
+    },
+    {
+        "test": {
+            "@alias": "bsps-hw.bsps-runtime.live_boot_from_USB",
+            "author": [
+                {
+                    "email": "juan.fernandox.ramos.frayle@intel.com",
+                    "name": "juan.fernandox.ramos.frayle@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Plugin usb which contains live image burned.",
+                    "expected_results": "User can choose boot from live image on usb stick from boot menu or command line option"
+                },
+                "2": {
+                    "action": "Configure device BIOS to firstly boot from USB if necessary.",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "Reboot the device and boot from USB stick.",
+                    "expected_results": "Live image can boot up with usb stick"
+                }				
+            },
+            "summary": "live_boot_from_USB"
         }
     },
     {
@@ -199,6 +225,114 @@
     },
     {
         "test": {
+            "@alias": "bsps-hw.bsps-runtime.USB_-_mount",
+            "author": [
+                {
+                    "email": "alexandru.c.georgescu@intel.com",
+                    "name": "alexandru.c.georgescu@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "Boot system \n\n",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "Plug USB stick, it should be mount in  /run/media/sd(x) If X-window system does not start and show USB device, then use the terminal to mount it, following the next steps: \na. Locate the usb stick (usually it is on /dev/sdb) \nb. Create a directory with \"mkdir stick\"  (so you will have such a path as: /home/root/stick). \nc. Run the command  \"mount  /dev/sdb  /home/root/stick\" to mount  USB device on it. \n\n",
+                    "expected_results": "USB device should be mounted in  /run/media/sd(x)  \nor in  /home/root/stick  \n\n"
+                },
+                "3": {
+                    "action": "Then you can access USB stick (/home/root/stick) via Terminal or GUI  and try various commands and actions like \"cp\", \"mv\", \"touch\" and \"rm\".  Type \"dmesg\" command and check for recent mounted devices.",
+                    "expected_results": "Basic commands work properly. The system sends a notification in \"dmesg\" command, showing that the USB stick is accessible and the device is mounted ."
+                }
+            },
+            "summary": "USB_-_mount"
+        }
+    },
+    {
+        "test": {
+            "@alias": "bsps-hw.bsps-runtime.USB_-_read_files",
+            "author": [
+                {
+                    "email": "alexandru.c.georgescu@intel.com",
+                    "name": "alexandru.c.georgescu@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "boot system",
+                    "expected_results": "view/copy successfully"
+                },
+                "2": {
+                    "action": "plug usb stick",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "view files in usb by file browser",
+                    "expected_results": ""
+                },
+                "4": {
+                    "action": "copy some files from usb to local hardware",
+                    "expected_results": ""
+                }
+            },
+            "summary": "USB_-_read_files"
+        }
+    },
+    {
+        "test": {
+            "@alias": "bsps-hw.bsps-runtime.USB_-_umount",
+            "author": [
+                {
+                    "email": "alexandru.c.georgescu@intel.com",
+                    "name": "alexandru.c.georgescu@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "boot system",
+                    "expected_results": "usb directory in file browser automatically missed"
+                },
+                "2": {
+                    "action": "plug usb stick",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "view files in usb by file browser \n4.unplug usb",
+                    "expected_results": ""
+                }
+            },
+            "summary": "USB_-_umount"
+        }
+    },
+    {
+        "test": {
+            "@alias": "bsps-hw.bsps-runtime.USB_-_write_files",
+            "author": [
+                {
+                    "email": "alexandru.c.georgescu@intel.com",
+                    "name": "alexandru.c.georgescu@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "boot system",
+                    "expected_results": "create/copy successfully"
+                },
+                "2": {
+                    "action": "plug usb stick",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "create files in usb \n4.copy some files from local hardware to usb",
+                    "expected_results": ""
+                }
+            },
+            "summary": "USB_-_write_files"
+        }
+    },
+    {
+        "test": {
             "@alias": "bsps-hw.bsps-runtime.ethernet_static_ip_set_in_connman",
             "author": [
                 {
@@ -332,7 +466,7 @@
                     "expected_results": ""
                 },
                 "5": {
-                    "action": "Check if application can work as normal \n\ncontinue.sh as below: \n \n#!/bin/sh \n \ni=1 \nwhile [ 0 ] \ndo \n echo $i \n sleep 1 \n i=$((i+1)) \ndone ",
+                    "action": "Check if application can work as normal \ncontinue.sh as below: \n \n#!/bin/sh \n \ni=1 \nwhile [ 0 ] \ndo \n echo $i \n sleep 1 \n i=$((i+1)) \ndone ",
                     "expected_results": "Screen should resume back and script can run continuously incrementing the i's value from where it was before going to standby state. Date should be the same with the corresponding time increment."
                 }
             },
@@ -423,7 +557,7 @@
                 },
                 "4": {
                     "action": "check usb mouse and keyboard",
-                    "expected_results": ""
+                    "expected_results": "Usb mouse and keyboard should work"
                 }
             },
             "summary": "Test_if_usb_hid_device_works_well_after_resume_from_suspend_state"
@@ -566,9 +700,13 @@
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "view files in MicroSDby file browser \n4 unplug MicroSD",
+                    "action": "view files in MicroSDby file browser",
                     "expected_results": ""
-                }
+                },
+                "4": {
+                    "action": "unplug MicroSD",
+                    "expected_results": ""
+                }				
             },
             "summary": "MicroSD_-__umount"
         }
@@ -675,6 +813,36 @@
     },
     {
         "test": {
+            "@alias": "bsps-hw.bsps-tools.media_player_-_stop/play_button_(ogv)",
+            "author": [
+                {
+                    "email": "alexandru.c.georgescu@intel.com",
+                    "name": "alexandru.c.georgescu@intel.com"
+                }
+            ],
+            "execution": {
+                "1": {
+                    "action": "copy sample ogv file to system",
+                    "expected_results": ""
+                },
+                "2": {
+                    "action": "launch media player can play the ogv file",
+                    "expected_results": ""
+                },
+                "3": {
+                    "action": "click \"stop\" button to stop playing",
+                    "expected_results": ""
+                },
+                "4": {
+                    "action": "click \"start\" button to resume playing",
+                    "expected_results": "ogv file can be start/stop without problem"
+                }
+            },
+            "summary": "media_player_-_stop/play_button_(ogv)"
+        }
+    },
+    {
+        "test": {
             "@alias": "bsps-hw.bsps-tools.audio_-_play_(ogg)_with_HDMI",
             "author": [
                 {
@@ -745,7 +913,7 @@
                 },
                 "3": {
                     "action": "Run \"./abat.sh\" to run ABAT test \n######## \ndiff --git a/glxgears_check.sh b/glxgears_check.sh \nindex 17622b8..c4d3b97 100755 \n--- a/glxgears_check.sh \n+++ b/glxgears_check.sh \n@@ -31,7 +31,7 @@ else \n \n sleep 6 \n \n- XPID=$( ps ax | awk '{print $1, $5}' | grep glxgears | awk '{print $1}') \n+ XPID=$( ps | awk '{print $1, $5}' | grep glxgears | awk '{print $1}') \n if [ ! -z \"$XPID\" ]; then \n kill -9 $XPID >/dev/null 2>&1 \n echo \"glxgears can run, PASS!\" \ndiff --git a/x_close.sh b/x_close.sh \nindex e287be1..3429f1a 100755 \n--- a/x_close.sh \n+++ b/x_close.sh \n@@ -22,7 +22,7 @@ \n# \nfunction close_proc(){ \necho \"kill process Xorg\" \n-XPID=$( ps ax | awk '{print $1, $5}' | egrep \"X$|Xorg$\" | awk '{print $1}') \n+XPID=$( ps | awk '{print $1, $6}' | egrep \"X$|Xorg$\" | awk '{print $1}') \nif [ ! -z \"$XPID\" ]; then \n kill $XPID \n sleep 4 \ndiff --git a/x_start.sh b/x_start.sh \nindex 9cf6eab..2305796 100755 \n--- a/x_start.sh \n+++ b/x_start.sh \n@@ -24,7 +24,7 @@ \nX_ERROR=0 \n \n#test whether X has started \n-PXID=$(ps ax |awk '{print $1,$5}' |egrep \"Xorg$|X$\" |grep -v grep | awk '{print $1}') \n+PXID=$(ps |awk '{print $1,$6}' |egrep \"Xorg$|X$\" |grep -v grep | awk '{print $1}') \nif [ ! -z \"$PXID\" ]; then \n echo \"[WARNING] Xorg has started!\" \n XORG_STATUS=\"started\" \n@@ -35,9 +35,11 @@ else \n #start up the x server \n echo \"Start up the X server for test in display $DISPLAY................\"  \n- $XORG_DIR/bin/X >/dev/null 2>&1 & \n+ #$XORG_DIR/bin/X >/dev/null 2>&1 & \n+ #sleep 8 \n+ #xterm & \n+ /etc/init.d/xserver-nodm start & \n sleep 8 \n- xterm & \nfi \n XLOG_FILE=/var/log/Xorg.0.log \n [ -f $XORG_DIR/var/log/Xorg.0.log ] && XLOG_FILE=$XORG_DIR/var/log/Xorg.0.log \n@@ -54,7 +56,7 @@ fi \n X_ERROR=1 \n fi \n \n- XPID=$( ps ax | awk '{print $1, $5}' | egrep \"X$|Xorg$\" |grep -v grep| awk '{print $1}') \n+ XPID=$( ps | awk '{print $1, $6}' | egrep \"X$|Xorg$\" |grep -v grep| awk '{print $1}') \n if [ -z \"$XPID\" ]; then \n echo \"Start up X server FAIL!\" \necho \n######## ",
-                    "expected_results": "All ABAT test should pass .   Note : If below 3 fails appears ignore them.  - start up X server fail.. due is already up - module [intel_agp] - module [i915]"
+                    "expected_results": "All ABAT test should pass. \nNote : If below 3 fails appears ignore them. \n- start up X server fail.. due is already up \n- module [intel_agp] \n- module [i915]"
                 }
             },
             "summary": "Graphics_-_ABAT"
@@ -960,7 +1128,7 @@
             ],
             "execution": {
                 "1": {
-                    "action": "1.- Create a yocto project image in a USB \nexample",
+                    "action": "1.- Create a yocto project image in a USB \nexample <dd if= core-image-sato-sdk.hddimg of =/dev/sdb>",
                     "expected_results": "Verify you can create a live image  \n"
                 },
                 "2": {
@@ -1022,143 +1190,11 @@
                     "expected_results": "Press the full screen mode icon, seek bar and volume control must work fine \n"
                 },
                 "8": {
-                    "action": "Verify that pressing > while playing a file makes the slide goes slow/backwards or faster",
-                    "expected_results": "Verify > works correctly"
+                    "action": "Verify that pressing << or >> while playing a file makes the slide goes slow/backwards or faster",
+                    "expected_results": "Verify << and >> works correctly"
                 }
             },
             "summary": "Test_Seek_bar_and_volume_control"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-runtime.live_boot_from_USB",
-            "author": [
-                {
-                    "email": "juan.fernandox.ramos.frayle@intel.com",
-                    "name": "juan.fernandox.ramos.frayle@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "Plugin usb which contains live image burnedConfigure device BIOS to firstly boot from USB if necessaryReboot the device and boot from USB stick\n",
-                    "expected_results": "User can choose boot from live image on usb stick from boot menu or command line option"
-                }
-            },
-            "summary": "live_boot_from_USB"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-runtime.USB_-_umount",
-            "author": [
-                {
-                    "email": "juan.fernandox.ramos.frayle@intel.com",
-                    "name": "juan.fernandox.ramos.frayle@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "Boot system.Plug and mount an USB stick with some files.View files in USB by using the \"ls\" command.Unmount usb: $umount /dev/sdx\n",
-                    "expected_results": "Verify the system boots ok.Verify the usb was successfully mounted with the \"df\"command.Verify the files are present in mounted usb.verify that usb is unmounted (type \"df\").\n"
-                }
-            },
-            "summary": "USB_-_umount"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-runtime.USB_-_read_files",
-            "author": [
-                {
-                    "email": "juan.fernandox.ramos.frayle@intel.com",
-                    "name": "juan.fernandox.ramos.frayle@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "Boot systemPlug and mount usb stick View files in usb by \"ls\" commandCopy some files from usb to local hardware\n",
-                    "expected_results": "\n  View/copy usb files successfully.\n"
-                }
-            },
-            "summary": "USB_-_read_files"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-runtime.USB_-_mount",
-            "author": [
-                {
-                    "email": "juan.fernandox.ramos.frayle@intel.com",
-                    "name": "juan.fernandox.ramos.frayle@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "Boot system. ",
-                    "expected_results": "You should be able to boot to the system.  2.The system sends notification messages in \"dmesg\"command, showing that the USB stick is accessible.  "
-                },
-                "2": {
-                    "action": "Plug USB stick.Type \"dmesg\" command and check for recent device attachment output.  ",
-                    "expected_results": ""
-                },
-                "3": {
-                    "action": "Mount the USB stick,following the next steps:  a. Locate the usb stick using dmesg (usually it is on /dev/sdb).  b. Create a directory with \"mkdir /mnt/usb\" (so you will have such a path as: /mnt/usb).  c. Run the command \"mount /dev/sdb /mnt/usb\" to mount USB device on it. ",
-                    "expected_results": "USB device should be mounted in: /mnt/usb "
-                },
-                "4": {
-                    "action": "When you can access the USB stick (/mnt/usb) try various commands and actions like \"cp\", \"mv\", \"touch\" and \"rm\". \n",
-                    "expected_results": "Basic commands work properly.\n"
-                }
-            },
-            "summary": "USB_-_mount"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-runtime.USB_-_write_files",
-            "author": [
-                {
-                    "email": "juan.fernandox.ramos.frayle@intel.com",
-                    "name": "juan.fernandox.ramos.frayle@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "Boot systemPlug and mount usb stickCreate files in usbCopy some files from local hardware to usb",
-                    "expected_results": "\n  Create/copy successfully\n"
-                }
-            },
-            "summary": "USB_-_write_files"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-tools.media_player_-_stop/play_button_(ogv)",
-            "author": [
-                {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "copy sample ogv file to system",
-                    "expected_results": ""
-                },
-                "2": {
-                    "action": "launch media player can play the ogv file",
-                    "expected_results": ""
-                },
-                "3": {
-                    "action": "click \"stop\" button to stop playing",
-                    "expected_results": ""
-                },
-                "4": {
-                    "action": "click \"start\" button to resume playing",
-                    "expected_results": "ogv file can be start/stop without problem"
-                }
-            },
-            "summary": "media_player_-_stop/play_button_(ogv)"
         }
     }
 ]
