@@ -71,7 +71,7 @@
                 },
                 "3": {
                     "action": "Double click C/C++.",
-                    "expected_results": "1"
+                    "expected_results": ""
                 },
                 "4": {
                     "action": "Click C or C++ Project to create the project.",
@@ -153,7 +153,7 @@
                 },
                 "3": {
                     "action": "Double click C/C++. ",
-                    "expected_results": "1"
+                    "expected_results": ""
                 },
                 "4": {
                     "action": "Click C or C++ Project to create the project. ",
@@ -208,7 +208,7 @@
                     "expected_results": ""
                 },
                 "17": {
-                    "action": "After all settings are done, select the Debug button on the bottom right corner ottom right cornerottom right corner",
+                    "action": "After all settings are done, select the Debug button on the bottom right corner",
                     "expected_results": ""
                 }
             },
@@ -230,7 +230,7 @@
                     "expected_results": "Eclipse plugin is successfully installed  \n\nDocumentation is there. For example if you have release yocto-2.0.1 you will found on   http://autobuilder.yoctoproject.org/pub/releases/yocto-2.0.1/eclipse-plugin/mars/  archive with documentation like org.yocto.doc-development-$date.zip  \n  \n"
                 },
                 "2": {
-                    "action": "Checkout correct tag.  \n\n    - git checkout / \n\n",
+                    "action": "Checkout correct tag.  \n\n    - git checkout <eclipse-version>/<yocto-version> \n\n",
                     "expected_results": "After plugin is build you must have  4 archive in foder scripts from eclipse-poky:  \n     - org.yocto.bc - mars-master-$date.zip  \n     - org.yocto.doc - mars-master-$date.zip    --> documentation  \n     - org.yocto.sdk - mars-master-$date.zip       \n     - org.yocto.sdk - mars-master-$date.-archive.zip  --> plugin  "
                 },
                 "3": {
@@ -276,18 +276,14 @@
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Install \"Eclipse IDE for C/C++ Developers\" Oxygen release (4.7.0)  \n\ta) Go to https://www.eclipse.org/downloads/packages/all, click \"Oxygen R\"  \n\tb) Click to download the build for your OS  \n\tc) Click \"Download\" button to download from a mirror  \n\td) Run \"tar xf\" to extract the downloaded archive  \n\te) Run \"eclipse/eclipse\" to start Eclipse  \n\tf) Optional step for host machine within Intel network: In Eclipse workbench window, go to \"Window\" menu -> \"Preferences...\".  \n\tg) In \"Preferences\" dialog, go to \"General\" -> \"Network Connections\", set \"Active Provider\" to \"Manual\". In \"Proxy \tentries\" table, select HTTP and click \"Edit\" and enter host \"proxy-chain.intel.com\" port 911, click OK. Repeat for \tHTTPS with port 91",
+                    "action": "Install \"Eclipse IDE for C/C++ Developers\" Oxygen release (4.7.0)  \n\ta) Go to https://www.eclipse.org/downloads/packages/all, click \"Oxygen R\"  \n\tb) Click to download the build for your OS  \n\tc) Click \"Download\" button to download from a mirror  \n\td) Run \"tar xf\" to extract the downloaded archive  \n\te) Run \"eclipse/eclipse\" to start Eclipse  \n\tf) Optional step for host machine within Intel network: In Eclipse workbench window, go to \"Window\" menu -> \"Preferences...\".  \n\tg) In \"Preferences\" dialog, go to \"General\" -> \"Network Connections\", set \"Active Provider\" to \"Manual\". In \"Proxy \tentries\" table, select HTTP and click \"Edit\" and enter host \"proxy-chain.intel.com\" port 911, click OK. Repeat for \tHTTPS with port 912. Click OK to close \"Preferences\" dialog.  \n\th) Go to \"File\" menu -> \"Restart\" to restart Eclipse for proxy settings to take effect. ",
                     "expected_results": ""
                 },
                 "3": {
-                    "action": "Click OK to close \"Preferences\" dialog.  \n\th) Go to \"File\" menu -> \"Restart\" to restart Eclipse for proxy settings to take effect. ",
-                    "expected_results": ""
-                },
-                "4": {
                     "action": "Install Eclipse Poky plugins  \n\ta) Download https://autobuilder.yocto.io/pub/releases//eclipse-plugin//org.yocto.sdk-development--archive.zip  \n\tb) In Eclipse workbench window, go to \"Help\" menu -> \"Install New Software...\"  \n\tc) In \"Install\" dialog, click \"Add...\" button  \n\td) In \"Add Repository\" dialog, enter \"Eclipse Poky\" for (repository) Name, click \"Archive...\"  \n\te) In \"Repository archive\" browse dialog, select the downloaded Eclipse Poky repository archive  \n\tf) Back in \"Add Repository\" dialog, click \"OK\"  \n\tg) Back in \"Install\" dialog, make sure \"Work with:\" is set to \"Eclipse Poky\" repository, tick \"Yocto Project \tDocumentation Plug-in\" and \"Yocto Project SDK Plug-in\", click \"Next >\" and verify plugins/features name/version, \tclick \"Next >\" and accept license agreement, click \"Finish\"  \n\th) If \"Security Warning\" dialog appears, click \"OK\" to install unsigned content.  \n\ti) In \"Software Updates\" dialog, click \"Yes\" to restart Eclipse to complete Eclipse Poky plugins installation. ",
                     "expected_results": ""
                 },
-                "5": {
+                "4": {
                     "action": "Setup Eclipse Poky to use SDK  \n\ta) In Eclipse workbench window, go to \"Window\" menu -> \"Preferences\".  \n\tb) In \"Preferences\" window, go to \"Yocto Project SDK\", in \"Cross Compiler Options\" frame, select \"Standalone pre-\tbuilt toolchain\".  ",
                     "expected_results": "Eclipse Poky plugins installed and running successfully, e.g. observe that \"Yocto Project Tools\" menu is available on Eclipse workbench window."
                 }
