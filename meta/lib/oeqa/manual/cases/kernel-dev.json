@@ -10,12 +10,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_7  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_7",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_7"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_defconfig"
@@ -32,12 +32,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_8  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_8",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_8"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_defconfig+fragments"
@@ -54,12 +54,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_Applying_patches"
@@ -76,12 +76,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_2  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_2",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_2"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-local-source"
@@ -98,12 +98,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_3  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_3",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_3"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-custom-local-source"
@@ -120,12 +120,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_5  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki.\n"
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_5",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_5"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_recipe-space_meta"
@@ -142,12 +142,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_6  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_6",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_6"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_External_source"
@@ -164,12 +164,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_10  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup_10",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_10"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_building_external_modules(hello-mod)"
@@ -186,12 +186,12 @@
             ],
             "execution": {
                 "1": {
-                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case.  ",
+                    "action": "Follow the Set Up procedure to complete the common and specific prerequisites for this test case. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Setup https://wikioproject.org/wiki/Kernel_Development_Test_Cases#Prerequisites_4  ",
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki.",
-                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki."
+                    "action": "Execute the test case steps asdocumented on the \"Kernel Development Test Cases\" wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Steps_4",
+                    "expected_results": "Review expected results on thethe \"Kernel Development Test Cases\"wiki. https://wiki.yoctoproject.org/wiki/Kernel_Development_Test_Cases#Expected_Results_4"
                 }
             },
             "summary": "TCTEMP_2.3_MANUAL_Kernel_dev_local_parallel_meta"
