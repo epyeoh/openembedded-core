@@ -4,8 +4,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_defconfig",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -26,8 +26,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_defconfig+fragments",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -48,8 +48,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_Applying_patches",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -70,8 +70,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-local-source",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -92,8 +92,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_linux-yocto-custom-local-source",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -114,8 +114,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_recipe-space_meta",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -136,8 +136,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_External_source",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -158,8 +158,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_building_external_modules(hello-mod)",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -180,8 +180,8 @@
             "@alias": "kernel-configuration.kernel-configuration.TCTEMP_2.3_MANUAL_Kernel_dev_local_parallel_meta",
             "author": [
                 {
-                    "email": "francisco.j.pedraza.gonzalez@intel.com",
-                    "name": "francisco.j.pedraza.gonzalez@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {

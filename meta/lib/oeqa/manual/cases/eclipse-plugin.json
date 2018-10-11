@@ -4,8 +4,8 @@
             "@alias": "eclipse-plugin.eclipse-plugin.support_SSH_connection_to_Target",
             "author": [
                 {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -34,8 +34,8 @@
             "@alias": "eclipse-plugin.eclipse-plugin.Launch_QEMU_from_Eclipse",
             "author": [
                 {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -44,9 +44,29 @@
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "wget  autobuilder.yoctoproject.org/pub/releases//machines/qemu/qemux86/qemu (ex:core-image-sato-sdk-qemux86-date-rootfs-tar-bz2) \nsource /opt/poky/version/environment-setup-i585-poky-linux  \n\nExtract qemu with runqemu-extract-sdk /home/user/file(ex.core-image-sato-sdk-qemux86.bz2) \n/home/user/qemux86-sato-sdk  \n\n(a)Point to the Toolchain:  \n \nIf you are using a stand-alone pre-built toolchain, you should be pointing to the /opt/poky/{test-version} directory as Toolchain Root Location. This is the default location for toolchains installed by the ADT Installer or by hand. If ADT is installed in other location, use that location as Toolchain location.\nIf you are using a system-derived toolchain, the path you provide for the Toolchain Root Location field is the Yocto Project's build directory.  \n \n           E.g:/home/user/yocto/poky/build \n(b)Specify the Sysroot Location: \nSysroot Location is the location where the root filesystem for the target hardware is created on the development system by the ADT Installer (SYSROOT in step 2 of the case ADT installer Installation).  \n   \n         Local :     e.g: /home/user/qemux86-sato-sdk \nUsing ADT : e.g :/home/user/test-yocto/qemux86  \n\n(c)Select the Target Architecture:  \n \nThe target architecture is the type of hardware you are going to use or emulate. Use the pull-down Target Architecture menu to make your selection.  \n \n\n(d) QEMU: \nSelect this option if you will be using the QEMU emulator. Specify the Kernel matching the QEMU architecture you are using. \n      wget  autobuilder.yoctoproject.org/pub/releases//machines/qemu/qemux86/bzImage-qemux86.bin \n      e.g: /home/$USER/yocto/adt-installer/download_image/bzImage-qemux86.bin  \n\n(e) select OK to save the settings.  \n\n\n1: In the Eclipse toolbar, expose the Run -> External Tools menu. Your image should appear as a selectable menu item.  \n2: Select your image in the navigation pane to launch the emulator in a new window. \n3: If needed, enter your host root password in the shell window at the prompt. This sets up a Tap 0 connection needed for running in user-space NFS mode. \n",
+                    "action": "wget  autobuilder.yoctoproject.org/pub/releases//machines/qemu/qemux86/qemu (ex:core-image-sato-sdk-qemux86-date-rootfs-tar-bz2) \nsource /opt/poky/version/environment-setup-i585-poky-linux  \n\nExtract qemu with runqemu-extract-sdk /home/user/file(ex.core-image-sato-sdk-qemux86.bz2) \n/home/user/qemux86-sato-sdk  \n\n",
                     "expected_results": " Qemu can be lauched normally."
-                }
+                },
+                "3": {
+                    "action": "(a)Point to the Toolchain:  \n \nIf you are using a stand-alone pre-built toolchain, you should be pointing to the /opt/poky/{test-version} directory as Toolchain Root Location. This is the default location for toolchains installed by the ADT Installer or by hand. If ADT is installed in other location, use that location as Toolchain location.\nIf you are using a system-derived toolchain, the path you provide for the Toolchain Root Location field is the Yocto Project's build directory.  \n \n           E.g:/home/user/yocto/poky/build \n",
+                    "expected_results": ""
+                },
+                "4": {
+                    "action": "(b)Specify the Sysroot Location: \nSysroot Location is the location where the root filesystem for the target hardware is created on the development system by the ADT Installer (SYSROOT in step 2 of the case ADT installer Installation).  \n   \n         Local :     e.g: /home/user/qemux86-sato-sdk \nUsing ADT : e.g :/home/user/test-yocto/qemux86  \n\n",
+                    "expected_results": ""
+                },
+                "5": {
+                    "action": "(c)Select the Target Architecture:  \n \nThe target architecture is the type of hardware you are going to use or emulate. Use the pull-down Target Architecture menu to make your selection.  \n \n\n",
+                    "expected_results": ""
+                },
+                "6": {
+                    "action": "(d) QEMU: \nSelect this option if you will be using the QEMU emulator. Specify the Kernel matching the QEMU architecture you are using. \n      wget  autobuilder.yoctoproject.org/pub/releases//machines/qemu/qemux86/bzImage-qemux86.bin \n      e.g: /home/$USER/yocto/adt-installer/download_image/bzImage-qemux86.bin  \n\n",
+                    "expected_results": ""
+                },	
+                "7": {
+                    "action": "(e) select OK to save the settings.  \n\n\n1: In the Eclipse toolbar, expose the Run -> External Tools menu. Your image should appear as a selectable menu item.  \n2: Select your image in the navigation pane to launch the emulator in a new window. \n3: If needed, enter your host root password in the shell window at the prompt. This sets up a Tap 0 connection needed for running in user-space NFS mode. \n",
+                    "expected_results": ""
+                }				
             },
             "summary": "Launch_QEMU_from_Eclipse"
         }
@@ -56,8 +76,8 @@
             "@alias": "eclipse-plugin.eclipse-plugin.Relocatable_SDK_-_C_-_Build_Hello_World_ANSI_C_Autotools_Project",
             "author": [
                 {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -138,8 +158,8 @@
             "@alias": "eclipse-plugin.eclipse-plugin.Relocatable_SDK_-_C++_-_Build_Hello_World_C++_Autotools_project",
             "author": [
                 {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
+                    "email": "ee.peng.yeoh@intel.com",
+                    "name": "ee.peng.yeoh@intel.com"
                 }
             ],
             "execution": {
@@ -276,14 +296,22 @@
                     "expected_results": ""
                 },
                 "2": {
-                    "action": "Install \"Eclipse IDE for C/C++ Developers\" Oxygen release (4.7.0)  \n\ta) Go to https://www.eclipse.org/downloads/packages/all, click \"Oxygen R\"  \n\tb) Click to download the build for your OS  \n\tc) Click \"Download\" button to download from a mirror  \n\td) Run \"tar xf\" to extract the downloaded archive  \n\te) Run \"eclipse/eclipse\" to start Eclipse  \n\tf) Optional step for host machine within Intel network: In Eclipse workbench window, go to \"Window\" menu -> \"Preferences...\".  \n\tg) In \"Preferences\" dialog, go to \"General\" -> \"Network Connections\", set \"Active Provider\" to \"Manual\". In \"Proxy \tentries\" table, select HTTP and click \"Edit\" and enter host \"proxy-chain.intel.com\" port 911, click OK. Repeat for HTTPS with port 912 \nClick OK to close \"Preferences\" dialog.  \n\th) Go to \"File\" menu -> \"Restart\" to restart Eclipse for proxy settings to take effect. ",
+                    "action": "Install \"Eclipse IDE for C/C++ Developers\" Oxygen release (4.7.0)  \n\ta) Go to https://www.eclipse.org/downloads/packages/all, click \"Oxygen R\"  \n\tb) Click to download the build for your OS  \n\tc) Click \"Download\" button to download from a mirror  \n\td) Run \"tar xf\" to extract the downloaded archive  ",
                     "expected_result": ""
                 },
                 "3": {
-                    "action": "Install Eclipse Poky plugins  \n\ta) Download https://autobuilder.yocto.io/pub/releases//eclipse-plugin//org.yocto.sdk-development--archive.zip  \n\tb) In Eclipse workbench window, go to \"Help\" menu -> \"Install New Software...\"  \n\tc) In \"Install\" dialog, click \"Add...\" button  \n\td) In \"Add Repository\" dialog, enter \"Eclipse Poky\" for (repository) Name, click \"Archive...\"  \n\te) In \"Repository archive\" browse dialog, select the downloaded Eclipse Poky repository archive  \n\tf) Back in \"Add Repository\" dialog, click \"OK\"  \n\tg) Back in \"Install\" dialog, make sure \"Work with:\" is set to \"Eclipse Poky\" repository, tick \"Yocto Project \tDocumentation Plug-in\" and \"Yocto Project SDK Plug-in\", click \"Next >\" and verify plugins/features name/version, \tclick \"Next >\" and accept license agreement, click \"Finish\"  \n\th) If \"Security Warning\" dialog appears, click \"OK\" to install unsigned content.  \n\ti) In \"Software Updates\" dialog, click \"Yes\" to restart Eclipse to complete Eclipse Poky plugins installation. ",
-                    "expected_results": ""
+                    "action": "Install \"Eclipse IDE for C/C++ Developers\" Oxygen release (4.7.0) (Continue)  \n\te) Run \"eclipse/eclipse\" to start Eclipse  \n\tf) Optional step for host machine within Intel network: In Eclipse workbench window, go to \"Window\" menu -> \"Preferences...\".  \n\tg) In \"Preferences\" dialog, go to \"General\" -> \"Network Connections\", set \"Active Provider\" to \"Manual\". In \"Proxy \tentries\" table, select HTTP and click \"Edit\" and enter host \"proxy-chain.intel.com\" port 911, click OK. Repeat for HTTPS with port 912 \nClick OK to close \"Preferences\" dialog.  \n\th) Go to \"File\" menu -> \"Restart\" to restart Eclipse for proxy settings to take effect. ",
+                    "expected_result": ""
                 },
                 "4": {
+                    "action": "Install Eclipse Poky plugins  \n\ta) Download https://autobuilder.yocto.io/pub/releases/<yocto-version>/eclipse-plugin/<eclipse-version>/org.yocto.sdk-development-<date>-archive.zip   \n\tb) In Eclipse workbench window, go to \"Help\" menu -> \"Install New Software...\"  \n\tc) In \"Install\" dialog, click \"Add...\" button  \n\td) In \"Add Repository\" dialog, enter \"Eclipse Poky\" for (repository) Name, click \"Archive...\"  ",
+                    "expected_results": ""
+                },
+                "5": {
+                    "action": "Install Eclipse Poky plugins (continue)  \n\te) In \"Repository archive\" browse dialog, select the downloaded Eclipse Poky repository archive  \n\tf) Back in \"Add Repository\" dialog, click \"OK\"  \n\tg) Back in \"Install\" dialog, make sure \"Work with:\" is set to \"Eclipse Poky\" repository, tick \"Yocto Project \tDocumentation Plug-in\" and \"Yocto Project SDK Plug-in\", click \"Next >\" and verify plugins/features name/version, \tclick \"Next >\" and accept license agreement, click \"Finish\"  \n\th) If \"Security Warning\" dialog appears, click \"OK\" to install unsigned content.  \n\ti) In \"Software Updates\" dialog, click \"Yes\" to restart Eclipse to complete Eclipse Poky plugins installation. ",
+                    "expected_results": ""
+                },
+                "6": {
                     "action": "Setup Eclipse Poky to use SDK  \n\ta) In Eclipse workbench window, go to \"Window\" menu -> \"Preferences\".  \n\tb) In \"Preferences\" window, go to \"Yocto Project SDK\", in \"Cross Compiler Options\" frame, select \"Standalone pre-\tbuilt toolchain\".  ",
                     "expected_results": "Eclipse Poky plugins installed and running successfully, e.g. observe that \"Yocto Project Tools\" menu is available on Eclipse workbench window."
                 }
