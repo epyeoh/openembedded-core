@@ -254,8 +254,8 @@
           "expected_results": ""
         },
         "5": {
-          "action": "bitbake core-image-minimal </poky>",
-          "expected_results": "Below error should be displayed:   \n     \"ERROR: Layer directory  does not exist! Please check BBLAYERS in //conf/bblayers.conf\""
+          "action": "bitbake core-image-minimal",
+          "expected_results": "Below error should be displayed:\n\"ERROR: Layer directory  does not exist! Please check BBLAYERS in <poky dir>/<build dir>/conf/bblayers.conf\""
         }
       },
       "summary": "test_bitbake_sane_error_for_invalid_layer"
