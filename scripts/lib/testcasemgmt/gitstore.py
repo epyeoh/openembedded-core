@@ -146,3 +146,12 @@ class GitStore(object):
             self._store_test_result_from_empty_git(logger, source_dir, dest_git_dir, git_branch, top_folder,
                                                    sub_folder_list)
 
+    def checkout_git_branch(self, git_dir, git_branch):
+        print('Checkout git branch ...')
+        if self._check_if_git_repo_and_git_branch_exist(git_dir, git_branch):
+            repo = self._git_init(git_dir)
+            self._git_checkout_git_repo(repo, git_branch)
+            return True
+        else:
+            print('Could not find git_dir or git_branch: %s %s' % (git_dir, git_branch))
+            return False
