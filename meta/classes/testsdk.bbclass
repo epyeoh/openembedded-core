@@ -81,7 +81,12 @@ def testsdk_main(d):
         component = "%s %s" % (pn, OESDKTestContextExecutor.name)
         context_msg = "%s:%s" % (os.path.basename(tcname), os.path.basename(sdk_env))
 
-        result.logDetails()
+        json_result_dir = os.path.join(d.getVar("WORKDIR"),
+                                       'temp',
+                                       'json_testresults-%s' % os.getpid(),
+                                       'sdk',
+                                       d.getVar("IMAGE_BASENAME"))
+        result.logDetails(json_result_dir)
         result.logSummary(component, context_msg)
 
         if not result.wasSuccessful():
@@ -185,7 +190,12 @@ def testsdkext_main(d):
         component = "%s %s" % (pn, OESDKExtTestContextExecutor.name)
         context_msg = "%s:%s" % (os.path.basename(tcname), os.path.basename(sdk_env))
 
-        result.logDetails()
+        json_result_dir = os.path.join(d.getVar("WORKDIR"),
+                                       'temp',
+                                       'json_testresults-%s' % os.getpid(),
+                                       'sdkext',
+                                       d.getVar("IMAGE_BASENAME"))
+        result.logDetails(json_result_dir)
         result.logSummary(component, context_msg)
 
         if not result.wasSuccessful():
