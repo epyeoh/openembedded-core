@@ -46,9 +46,6 @@ class OETestResult(_TestResult):
 
         self.tc = tc
 
-        self.result_types = ['failures', 'errors', 'skipped', 'expectedFailures', 'successes']
-        self.result_desc = ['FAILED', 'ERROR', 'SKIPPED', 'EXPECTEDFAIL', 'PASSED']
-
     def startTest(self, test):
         # May have been set by concurrencytest
         if test.id() not in self.starttime:
@@ -81,58 +78,57 @@ class OETestResult(_TestResult):
         else:
             msg = "%s - FAIL - Required tests failed" % component
         skipped = len(self.skipped)
-        if skipped: 
+        if skipped:
             msg += " (skipped=%d)" % skipped
         self.tc.logger.info(msg)
 
-    def _isTestResultContainTestCaseWithResultTypeProvided(self, case, type):
-        found = False
+    def _getTestResultDetails(self, case):
+        result_types = {'failures': 'FAILED', 'errors': 'ERROR', 'skipped': 'SKIPPED',
+                        'expectedFailures': 'EXPECTEDFAIL', 'successes': 'PASSED'}
+        #result_desc = ['FAILED', 'ERROR', 'SKIPPED', 'EXPECTEDFAIL', 'PASSED']
 
-        for (scase, msg) in getattr(self, type):
-            if case.id() == scase.id():
-                found = True
-                break
-            scase_str = str(scase.id())
-
-            # When fails at module or class level the class name is passed as string
-            # so figure out to see if match
-            m = re.search("^setUpModule \((?P<module_name>.*)\)$", scase_str)
-            if m:
-                if case.__class__.__module__ == m.group('module_name'):
+        for rtype in result_types:
+            found = False
+            for (scase, msg) in getattr(self, rtype):
+                if case.id() == scase.id():
                     found = True
                     break
+                scase_str = str(scase.id())
 
-            m = re.search("^setUpClass \((?P<class_name>.*)\)$", scase_str)
-            if m:
-                class_name = "%s.%s" % (case.__class__.__module__,
-                        case.__class__.__name__)
+                # When fails at module or class level the class name is passed as string
+                # so figure out to see if match
+                m = re.search("^setUpModule \((?P<module_name>.*)\)$", scase_str)
+                if m:
+                    if case.__class__.__module__ == m.group('module_name'):
+                        found = True
+                        break
 
-                if class_name == m.group('class_name'):
-                    found = True
-                    break
+                m = re.search("^setUpClass \((?P<class_name>.*)\)$", scase_str)
+                if m:
+                    class_name = "%s.%s" % (case.__class__.__module__,
+                            case.__class__.__name__)
 
-        if found:
-            return (found, msg)
+                    if class_name == m.group('class_name'):
+                        found = True
+                        break
 
-        return (found, None)
+            if found:
+                return result_types[rtype], msg
+
+        return 'UNKNOWN', None
 
     def addSuccess(self, test):
         #Added so we can keep track of successes too
         self.successes.append((test, None))
         super(OETestResult, self).addSuccess(test)
 
-    def logDetails(self):
+    def logDetails(self, json_file_dir=''):
         self.tc.logger.info("RESULTS:")
+        results = {}
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
 
-            found = False
-            desc = None
-            for idx, name in enumerate(self.result_types):
-                (found, msg) = self._isTestResultContainTestCaseWithResultTypeProvided(case, self.result_types[idx])
-                if found:
-                    desc = self.result_desc[idx]
-                    break
+            (status, log) = self._getTestResultDetails(case)
 
             oeid = -1
             if hasattr(case, 'decorators'):
@@ -144,42 +140,13 @@ class OETestResult(_TestResult):
             if case.id() in self.starttime and case.id() in self.endtime:
                 t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
 
-            if found:
-                self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(),
-                    oeid, desc, t))
-            else:
-                self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(),
-                    oeid, 'UNKNOWN', t))
+            self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
+            results[case.id()] = (status, log)
 
-    def _get_testcase_result_dict(self):
-        testcase_result_dict = {}
-        testcase_testmessage_dict = {}
-        for case_name in self.tc._registry['cases']:
-            case = self.tc._registry['cases'][case_name]
-
-            found = False
-            desc = None
-            test_msg = ''
-            for idx, name in enumerate(self.result_types):
-                (found, msg) = self._isTestResultContainTestCaseWithResultTypeProvided(case, self.result_types[idx])
-                if found:
-                    desc = self.result_desc[idx]
-                    test_msg = msg
-                    break
-
-            if found:
-                testcase_result_dict[case.id()] = desc
-                testcase_testmessage_dict[case.id()] = test_msg
-            else:
-                testcase_result_dict[case.id()] = "UNKNOWN"
-        return testcase_result_dict, testcase_testmessage_dict
-
-    def logDetailsInJson(self, file_dir):
-        (testcase_result_dict, testcase_testmessage_dict) = self._get_testcase_result_dict()
-        if len(testcase_result_dict) > 0 and len(testcase_testmessage_dict) > 0:
-            jsontresulthelper = OEJSONTestResultHelper(testcase_result_dict, testcase_testmessage_dict)
-            jsontresulthelper.write_json_testresult_files_by_testmodule(file_dir)
-            jsontresulthelper.write_testcase_log_files(os.path.join(file_dir, 'logs'))
+        if len(json_file_dir) > 0:
+            tresultjsonhelper = OETestResultJSONHelper()
+            tresultjsonhelper.dump_testresult_file(results, json_file_dir)
+            tresultjsonhelper.dump_log_files(results, os.path.join(json_file_dir, 'logs'))
 
 class OEListTestsResult(object):
     def wasSuccessful(self):
@@ -293,25 +260,15 @@ class OETestRunner(_TestRunner):
 
         return OEListTestsResult()
 
-class OEJSONTestResultHelper(object):
-    def __init__(self, testcase_result_dict, testcase_log_dict):
-        self.testcase_result_dict = testcase_result_dict
-        self.testcase_log_dict = testcase_log_dict
-
-    def get_testcase_list(self):
-        return self.testcase_result_dict.keys()
+class OETestResultJSONHelper(object):
 
     def get_testsuite_from_testcase(self, testcase):
         testsuite = testcase[0:testcase.rfind(".")]
         return testsuite
 
-    def get_testmodule_from_testsuite(self, testsuite):
-        testmodule = testsuite[0:testsuite.find(".")]
-        return testmodule
-
-    def get_testsuite_testcase_dictionary(self):
+    def get_testsuite_testcase_dictionary(self, testresults):
         testsuite_testcase_dict = {}
-        for testcase in self.get_testcase_list():
+        for testcase in testresults.keys():
             testsuite = self.get_testsuite_from_testcase(testcase)
             if testsuite in testsuite_testcase_dict:
                 testsuite_testcase_dict[testsuite].append(testcase)
@@ -319,60 +276,39 @@ class OEJSONTestResultHelper(object):
                 testsuite_testcase_dict[testsuite] = [testcase]
         return testsuite_testcase_dict
 
-    def get_testmodule_testsuite_dictionary(self, testsuite_testcase_dict):
-        testsuite_list = testsuite_testcase_dict.keys()
-        testmodule_testsuite_dict = {}
-        for testsuite in testsuite_list:
-            testmodule = self.get_testmodule_from_testsuite(testsuite)
-            if testmodule in testmodule_testsuite_dict:
-                testmodule_testsuite_dict[testmodule].append(testsuite)
-            else:
-                testmodule_testsuite_dict[testmodule] = [testsuite]
-        return testmodule_testsuite_dict
-
-    def _get_testcase_result(self, testcase, testcase_status_dict):
-        if testcase in testcase_status_dict:
-            return testcase_status_dict[testcase]
-        return ""
-
-    def _create_testcase_testresult_object(self, testcase_list, testcase_result_dict):
+    def _create_testcase_testresult_object(self, testcase_list, testresults):
         testcase_dict = {}
         for testcase in sorted(testcase_list):
-            result = self._get_testcase_result(testcase, testcase_result_dict)
-            testcase_dict[testcase] = {"testresult": result}
+            testcase_dict[testcase] = {"testresult": testresults[testcase][0], "log": testresults[testcase][1]}
         return testcase_dict
 
-    def _create_json_testsuite_string(self, testsuite_list, testsuite_testcase_dict, testcase_result_dict):
+    def _create_json_testsuite_string(self, testresults):
+        testsuite_testcase = self.get_testsuite_testcase_dictionary(testresults)
         testsuite_object = {'testsuite': {}}
         testsuite_dict = testsuite_object['testsuite']
-        for testsuite in sorted(testsuite_list):
+        for testsuite in sorted(testsuite_testcase.keys()):
             testsuite_dict[testsuite] = {'testcase': {}}
             testsuite_dict[testsuite]['testcase'] = self._create_testcase_testresult_object(
-                testsuite_testcase_dict[testsuite],
-                testcase_result_dict)
+                                                        testsuite_testcase[testsuite],
+                                                        testresults)
         return json.dumps(testsuite_object, sort_keys=True, indent=4)
 
-    def write_json_testresult_files_by_testmodule(self, write_dir):
-        if not os.path.exists(write_dir):
-            pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
-        testsuite_testcase_dict = self.get_testsuite_testcase_dictionary()
-        testmodule_testsuite_dict = self.get_testmodule_testsuite_dictionary(testsuite_testcase_dict)
-        for testmodule in testmodule_testsuite_dict.keys():
-            testsuite_list = testmodule_testsuite_dict[testmodule]
-            json_testsuite = self._create_json_testsuite_string(testsuite_list, testsuite_testcase_dict,
-                                                                self.testcase_result_dict)
-            file_name = '%s.json' % testmodule
-            file_path = os.path.join(write_dir, file_name)
-            with open(file_path, 'w') as the_file:
-                the_file.write(json_testsuite)
+    def _write_file(self, write_dir, file_name, file_content):
+        file_path = os.path.join(write_dir, file_name)
+        with open(file_path, 'w') as the_file:
+            the_file.write(file_content)
 
-    def write_testcase_log_files(self, write_dir):
+    def dump_testresult_file(self, testresults, write_dir):
         if not os.path.exists(write_dir):
             pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
-        for testcase in self.testcase_log_dict.keys():
-            test_log = self.testcase_log_dict[testcase]
+        json_testsuite = self._create_json_testsuite_string(testresults)
+        self._write_file(write_dir, 'testresults.json', json_testsuite)
+
+    def dump_log_files(self, testresults, write_dir):
+        if not os.path.exists(write_dir):
+            pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
+        for testcase in testresults.keys():
+            test_log = testresults[testcase][1]
             if test_log is not None:
                 file_name = '%s.log' % testcase
-                file_path = os.path.join(write_dir, file_name)
-                with open(file_path, 'w') as the_file:
-                    the_file.write(test_log)
+                self._write_file(write_dir, file_name, test_log)
