@@ -7,10 +7,10 @@ import unittest
 import logging
 import re
 import json
-import pathlib
 
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
+from oeqa.utils.metadata import metadata_from_bb
 
 class OEStreamLogger(object):
     def __init__(self, logger):
@@ -85,7 +85,6 @@ class OETestResult(_TestResult):
     def _getTestResultDetails(self, case):
         result_types = {'failures': 'FAILED', 'errors': 'ERROR', 'skipped': 'SKIPPED',
                         'expectedFailures': 'EXPECTEDFAIL', 'successes': 'PASSED'}
-        #result_desc = ['FAILED', 'ERROR', 'SKIPPED', 'EXPECTEDFAIL', 'PASSED']
 
         for rtype in result_types:
             found = False
@@ -106,7 +105,7 @@ class OETestResult(_TestResult):
                 m = re.search("^setUpClass \((?P<class_name>.*)\)$", scase_str)
                 if m:
                     class_name = "%s.%s" % (case.__class__.__module__,
-                            case.__class__.__name__)
+                                            case.__class__.__name__)
 
                     if class_name == m.group('class_name'):
                         found = True
@@ -122,9 +121,9 @@ class OETestResult(_TestResult):
         self.successes.append((test, None))
         super(OETestResult, self).addSuccess(test)
 
-    def logDetails(self, json_file_dir=''):
+    def logDetails(self, json_file_dir=None, configuration=None, result_id=None):
         self.tc.logger.info("RESULTS:")
-        results = {}
+        result = {}
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
 
@@ -141,12 +140,11 @@ class OETestResult(_TestResult):
                 t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
 
             self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
-            results[case.id()] = (status, log)
+            result[case.id()] = {'status': status, 'log': log}
 
-        if len(json_file_dir) > 0:
+        if json_file_dir:
             tresultjsonhelper = OETestResultJSONHelper()
-            tresultjsonhelper.dump_testresult_file(results, json_file_dir)
-            tresultjsonhelper.dump_log_files(results, os.path.join(json_file_dir, 'logs'))
+            tresultjsonhelper.dump_testresult_file(result_id, result, configuration, json_file_dir)
 
 class OEListTestsResult(object):
     def wasSuccessful(self):
@@ -262,53 +260,39 @@ class OETestRunner(_TestRunner):
 
 class OETestResultJSONHelper(object):
 
-    def get_testsuite_from_testcase(self, testcase):
-        testsuite = testcase[0:testcase.rfind(".")]
-        return testsuite
+    testresult_filename = 'testresults.json'
 
-    def get_testsuite_testcase_dictionary(self, testresults):
-        testsuite_testcase_dict = {}
-        for testcase in testresults.keys():
-            testsuite = self.get_testsuite_from_testcase(testcase)
-            if testsuite in testsuite_testcase_dict:
-                testsuite_testcase_dict[testsuite].append(testcase)
-            else:
-                testsuite_testcase_dict[testsuite] = [testcase]
-        return testsuite_testcase_dict
+    def _get_testresults(self, write_dir):
+        testresults = {}
+        file = os.path.join(write_dir, self.testresult_filename)
+        if os.path.exists(file):
+            with open(file, "r") as f:
+                testresults = json.load(f)
+        return testresults
 
-    def _create_testcase_testresult_object(self, testcase_list, testresults):
-        testcase_dict = {}
-        for testcase in sorted(testcase_list):
-            testcase_dict[testcase] = {"testresult": testresults[testcase][0], "log": testresults[testcase][1]}
-        return testcase_dict
+    def _add_layers_branch_rev(self, configuration):
+        metadata = metadata_from_bb()
+        configuration['BRANCH'] = metadata['layers']['meta']['branch']
+        configuration['COMMIT'] = metadata['layers']['meta']['commit']
 
-    def _create_json_testsuite_string(self, testresults):
-        testsuite_testcase = self.get_testsuite_testcase_dictionary(testresults)
-        testsuite_object = {'testsuite': {}}
-        testsuite_dict = testsuite_object['testsuite']
-        for testsuite in sorted(testsuite_testcase.keys()):
-            testsuite_dict[testsuite] = {'testcase': {}}
-            testsuite_dict[testsuite]['testcase'] = self._create_testcase_testresult_object(
-                                                        testsuite_testcase[testsuite],
-                                                        testresults)
-        return json.dumps(testsuite_object, sort_keys=True, indent=4)
+    def _create_json_testresults_string(self, result_id, test_result, configuration, write_dir):
+        testresults = self._get_testresults(write_dir)
+        self._add_layers_branch_rev(configuration)
+        testresult = {'configuration': configuration,
+                      'result': test_result}
+        testresults[result_id] = testresult
+        return json.dumps(testresults, sort_keys=True, indent=4)
 
     def _write_file(self, write_dir, file_name, file_content):
         file_path = os.path.join(write_dir, file_name)
         with open(file_path, 'w') as the_file:
             the_file.write(file_content)
 
-    def dump_testresult_file(self, testresults, write_dir):
-        if not os.path.exists(write_dir):
-            pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
-        json_testsuite = self._create_json_testsuite_string(testresults)
-        self._write_file(write_dir, 'testresults.json', json_testsuite)
+    def dump_testresult_file(self, result_id, test_result, configuration, write_dir):
+        bb.utils.mkdirhier(write_dir)
+        lockfilename = os.path.join(write_dir, 'jsontestresult.lock')
+        lf = bb.utils.lockfile(lockfilename)
+        json_testresults = self._create_json_testresults_string(result_id, test_result, configuration, write_dir)
+        self._write_file(write_dir, self.testresult_filename, json_testresults)
+        bb.utils.unlockfile(lf)
 
-    def dump_log_files(self, testresults, write_dir):
-        if not os.path.exists(write_dir):
-            pathlib.Path(write_dir).mkdir(parents=True, exist_ok=True)
-        for testcase in testresults.keys():
-            test_log = testresults[testcase][1]
-            if test_log is not None:
-                file_name = '%s.log' % testcase
-                self._write_file(write_dir, file_name, test_log)

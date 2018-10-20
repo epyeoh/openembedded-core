@@ -204,6 +204,30 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         self.tc.logger.info("Running bitbake -e to test the configuration is valid/parsable")
         runCmd("bitbake -e")
 
+    def _get_json_result_dir(self, args):
+        json_result_dir = os.path.join(os.path.dirname(os.path.abspath(args.output_log)),
+                                       'json_testresults-%s' % args.test_start_time,
+                                       'oe-selftest')
+        if "OEQA_JSON_RESULT_COMMON_DIR" in self.tc.td:
+            json_result_dir = self.tc.td["OEQA_JSON_RESULT_COMMON_DIR"]
+
+        return json_result_dir
+
+    def _get_configuration(self, args):
+        import platform
+        return {'TEST_TYPE': 'oe-selftest',
+                'MACHINE': self.tc.td["MACHINE"],
+                'HOST_DISTRO': platform.linux_distribution(),
+                'START_TIME': args.test_start_time}
+
+    def _get_result_id(self, configuration):
+        distro = '-'.join(configuration['HOST_DISTRO'])
+        result_id = '%s-%s-%s-%s' % (configuration['TEST_TYPE'],
+                                     distro,
+                                     configuration['MACHINE'],
+                                     configuration['START_TIME'])
+        return result_id
+
     def _internal_run(self, logger, args):
         self.module_paths = self._get_cases_paths(
                 self.tc_kwargs['init']['td']['BBPATH'].split(':'))
@@ -220,10 +244,10 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         else:
             self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
-            json_result_dir = os.path.join(os.path.dirname(os.path.abspath(args.output_log)),
-                                           'json_testresults-%s' % args.test_start_time,
-                                           'oe-selftest')
-            rc.logDetails(json_result_dir)
+            configuration = self._get_configuration(args)
+            rc.logDetails(self._get_json_result_dir(args),
+                          configuration,
+                          self._get_result_id(configuration))
             rc.logSummary(self.name)
 
         return rc
