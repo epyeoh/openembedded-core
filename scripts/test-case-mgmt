@@ -4,13 +4,12 @@
 # execution and management
 #
 # As part of the initiative to provide LITE version Test Case Management System
-# with command-line and plain-text files (eg. manual test case file, test plan
-# file to specify list of test case to be executed, test result and log file)
-# to replace Testopia.
+# with command-line and plain-text files (eg. manual test case file, test result
+# and log file) to replace Testopia.
 # test-case-mgmt script was designed as part of the helper script for below purpose:
 # 1. To store test result & log inside git repository
 # 2. (Future) To provide test reporting in text-based test summary report
-# 3. (Future) To manage manual test case execution, store test result
+# 3. (Future) To manage manual test case execution, store manual execution test result
 #
 # To look for help information.
 #    $ test-case-mgmt
@@ -40,7 +39,6 @@ sys.path = sys.path + [lib_path]
 import argparse_oe
 import scriptutils
 import testcasemgmt.store
-import testcasemgmt.view
 logger = scriptutils.logger_create('test-case-mgmt')
 
 def _validate_user_input_arguments(args):
@@ -53,7 +51,7 @@ def _validate_user_input_arguments(args):
             return False
     return True
 
-def _set_default_arg_value_for_dest_dir(args):
+def _set_default_arg_value_for_git_dir(args):
     if hasattr(args, "git_dir"):
         if args.git_dir == '':
             base_path = script_path + '/..'
@@ -61,7 +59,8 @@ def _set_default_arg_value_for_dest_dir(args):
         logger.debug('Set git_dir argument: %s' % args.git_dir)
 
 def main():
-    parser = argparse_oe.ArgumentParser(description="OpenEmbedded testcase management tool, to store test result then to view test summary report.",
+    parser = argparse_oe.ArgumentParser(description="OpenEmbedded testcase management tool, store test result, "
+                                                    "reporting, and manual test execution.",
                                         add_help=False,
                                         epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
@@ -72,8 +71,6 @@ def main():
     subparsers.required = True
     subparsers.add_subparser_group('store', 'Store test result & log', 100)
     testcasemgmt.store.register_commands(subparsers)
-    subparsers.add_subparser_group('view', 'View test result', 200)
-    testcasemgmt.view.register_commands(subparsers)
     args = parser.parse_args()
     if args.debug:
         logger.setLevel(logging.DEBUG)
@@ -82,7 +79,7 @@ def main():
 
     if not _validate_user_input_arguments(args):
         return -1
-    _set_default_arg_value_for_dest_dir(args)
+    _set_default_arg_value_for_git_dir(args)
 
     try:
         ret = args.func(args, logger)
