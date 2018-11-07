@@ -22,21 +22,20 @@ from oeqa.utils.git import GitRepo, GitError
 from oe.path import copytree
 
 class GitStore(object):
+    git_sub_dir = ''
 
-    def _check_if_dir_contain_sub_dir(self, dir, sub_dir):
-        if os.path.exists(os.path.join(dir, sub_dir)):
-            return True
-        else:
-            return False
+    def __init__(self, git_dir, git_branch):
+        self.git_dir = git_dir
+        self.git_branch = git_branch
 
-    def _git_init(self, git_dir):
+    def _git_init(self):
         try:
-            repo = GitRepo(git_dir, is_topdir=True)
+            repo = GitRepo(self.git_dir, is_topdir=True)
         except GitError:
             print("Non-empty directory that is not a Git repository "
                    "at {}\nPlease specify an existing Git repository, "
                    "an empty directory or a non-existing directory "
-                   "path.".format(git_dir))
+                   "path.".format(self.git_dir))
         return repo
 
     def _run_git_cmd(self, repo, cmd):
@@ -46,14 +45,14 @@ class GitStore(object):
         except GitError:
             return False, None
 
-    def _check_if_git_dir_exist(self, git_dir):
-        if not os.path.exists('%s/.git' % git_dir):
+    def _check_if_git_dir_exist(self):
+        if not os.path.exists('%s/.git' % self.git_dir):
             return False
         return True
 
-    def _checkout_git_dir(self, git_dir, git_branch):
-        repo = self._git_init(git_dir)
-        cmd = 'checkout %s' % git_branch
+    def _checkout_git_dir(self):
+        repo = self._git_init()
+        cmd = 'checkout %s' % self.git_branch
         return self._run_git_cmd(repo, cmd)
 
     def _create_temporary_workspace_dir(self):
@@ -66,52 +65,59 @@ class GitStore(object):
         logger.debug('Creating directories: %s' % target_dir)
         bb.utils.mkdirhier(target_dir)
 
-    def _copy_files_from_source_to_destination_dir(self, logger, source_dir, destination_dir):
+    def _copy_files(self, logger, source_dir, destination_dir):
         if os.path.exists(source_dir) and os.path.exists(destination_dir):
             logger.debug('Copying test result & log from %s to %s' % (source_dir, destination_dir))
             copytree(source_dir, destination_dir)
 
-    def _push_testresult_files_to_git_repo(self, logger, file_dir, git_dir, git_branch, git_sub_dir):
+    def _store_files_to_git(self, logger, file_dir):
         logger.debug('Storing test result & log inside git repository (%s) and branch (%s)'
-                     % (git_dir, git_branch))
-        commit_msg_subject = 'Store %s from {hostname}' % os.path.join(git_dir, git_sub_dir)
-        commit_msg_body = 'git dir: %s\nsub dir list: %s\nhostname: {hostname}' % (git_dir, git_sub_dir)
+                     % (self.git_dir, self.git_branch))
+        commit_msg_subject = 'Store %s from {hostname}' % os.path.join(self.git_dir, self.git_sub_dir)
+        commit_msg_body = 'git dir: %s\nsub dir list: %s\nhostname: {hostname}' % (self.git_dir, self.git_sub_dir)
         return subprocess.run(["oe-git-archive",
                                file_dir,
-                               "-g", git_dir,
-                               "-b", git_branch,
+                               "-g", self.git_dir,
+                               "-b", self.git_branch,
                                "--commit-msg-subject", commit_msg_subject,
                                "--commit-msg-body", commit_msg_body])
 
-    def _store_test_result_from_empty_git(self, logger, source_dir, git_branch, git_dir, git_sub_dir):
-        workspace_dir = self._create_temporary_workspace_dir()
-        full_workspace_dir = os.path.join(workspace_dir, git_sub_dir)
-        self._make_directories(logger, full_workspace_dir)
-        self._copy_files_from_source_to_destination_dir(logger, source_dir, full_workspace_dir)
-        self._push_testresult_files_to_git_repo(logger, workspace_dir, git_dir, git_branch, git_sub_dir)
-        self._remove_temporary_workspace_dir(workspace_dir)
+    def _store_files_to_empty_git(self, logger, source_dir):
+        logger.debug('Storing files to empty git')
+        dest_top_dir = self._create_temporary_workspace_dir()
+        dest_sub_dir = os.path.join(dest_top_dir, self.git_sub_dir)
+        self._make_directories(logger, dest_sub_dir)
+        self._copy_files(logger, source_dir, dest_sub_dir)
+        self._store_files_to_git(logger, dest_top_dir)
+        self._remove_temporary_workspace_dir(dest_top_dir)
 
-    def _store_test_result_from_existing_git(self, logger, source_dir, git_branch, git_dir, git_sub_dir):
-        self._make_directories(logger, os.path.join(git_dir, git_sub_dir))
-        self._copy_files_from_source_to_destination_dir(logger, source_dir, os.path.join(git_dir, git_sub_dir))
-        self._push_testresult_files_to_git_repo(logger, git_dir, git_dir, git_branch, git_sub_dir)
+    def _store_files_to_existing_git(self, logger, source_dir):
+        logger.debug('Storing files to existing git')
+        dest_dir = os.path.join(self.git_dir, self.git_sub_dir)
+        self._make_directories(logger, dest_dir)
+        self._copy_files(logger, source_dir, dest_dir)
+        self._store_files_to_git(logger, self.git_dir)
 
-    def store_test_result(self, logger, source_dir, git_branch, git_dir, git_sub_dir, overwrite_result):
+    def store_test_result(self, logger, source_dir, git_sub_dir, overwrite_result):
+        self.git_sub_dir = git_sub_dir
         logger.debug('Initializing store the test result & log')
-        if self._check_if_git_dir_exist(git_dir) and self._checkout_git_dir(git_dir, git_branch):
-            logger.debug('Found destination git directory and git branch: %s %s' % (git_dir, git_branch))
-            if self._check_if_dir_contain_sub_dir(git_dir, git_sub_dir):
-                logger.debug('Found existing sub (%s) directory inside: %s' % (git_sub_dir, git_dir))
+        if self._check_if_git_dir_exist() and self._checkout_git_dir():
+            logger.debug('Found destination git directory and git branch: %s %s' % (self.git_dir, self.git_branch))
+            if os.path.exists(os.path.join(self.git_dir, self.git_sub_dir)):
+                logger.debug('Found existing sub (%s) directory inside: %s' % (self.git_sub_dir, self.git_dir))
                 if overwrite_result:
-                    logger.debug('Overwriting existing testresult inside: %s' % (os.path.join(git_dir, git_sub_dir)))
-                    shutil.rmtree(os.path.join(git_dir, git_sub_dir))
-                    self._store_test_result_from_existing_git(logger, source_dir, git_branch, git_dir, git_sub_dir)
+                    logger.debug('Overwriting existing testresult inside: %s' %
+                                 (os.path.join(self.git_dir, self.git_sub_dir)))
+                    shutil.rmtree(os.path.join(self.git_dir, self.git_sub_dir))
+                    self._store_files_to_existing_git(logger, source_dir)
                 else:
                     logger.debug('Skipped storing test result & log as it already exist. '
                                  'Specify overwrite if you wish to delete existing testresult and store again.')
             else:
-                logger.debug('Could not find existing sub (%s) directories inside: %s' % (git_sub_dir, git_dir))
-                self._store_test_result_from_existing_git(logger, source_dir, git_branch, git_dir, git_sub_dir)
+                logger.debug('Could not find existing sub (%s) directories inside: %s' %
+                             (self.git_sub_dir, self.git_dir))
+                self._store_files_to_existing_git(logger, source_dir)
         else:
-            logger.debug('Could not find destination git directory (%s) or git branch (%s)' % (git_dir, git_branch))
-            self._store_test_result_from_empty_git(logger, source_dir, git_branch, git_dir, git_sub_dir)
+            logger.debug('Could not find destination git directory (%s) or git branch (%s)' %
+                         (self.git_dir, self.git_branch))
+            self._store_files_to_empty_git(logger, source_dir)
