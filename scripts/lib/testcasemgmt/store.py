@@ -14,9 +14,8 @@
 from testcasemgmt.gitstore import GitStore
 
 def store(args, logger):
-    gitstore = GitStore()
-    gitstore.store_test_result(logger, args.source_dir, args.git_branch, args.git_dir, args.git_sub_dir,
-                               args.overwrite_result)
+    gitstore = GitStore(args.git_dir, args.git_branch)
+    gitstore.store_test_result(logger, args.source_dir, args.git_sub_dir, args.overwrite_result)
     return 0
 
 def register_commands(subparsers):
@@ -29,11 +28,11 @@ def register_commands(subparsers):
                               help='Source directory that contain the test result files to be stored.')
     parser_build.add_argument('git_branch', help='Git branch used to store the test result files.')
     parser_build.add_argument('-d', '--git_dir', default='',
-                              help='(Optional) Destination directory to be used/created as git repository '
+                              help='(Optional) Destination directory to be used or created as git repository '
                                    'to store the test result files from the source directory. '
                                    'Default location for destination directory will be <top_dir>/testresults.git.')
     parser_build.add_argument('-s', '--git_sub_dir', default='',
-                              help='(Optional) Additional sub directory to be used/created under the destination '
+                              help='(Optional) Additional sub directory to be used or created under the destination '
                                    'git repository, this sub directory will be used to hold the test result files. '
                                    'Use sub directory if need a custom directory to hold test files.')
     parser_build.add_argument('-o', '--overwrite_result', action='store_true',
