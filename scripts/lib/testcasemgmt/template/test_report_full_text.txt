@@ -1,0 +1,33 @@
+==============================================================================================================
+Test Report (Count of passed, failed, skipped group by test_component, test_configuration)
+==============================================================================================================
+--------------------------------------------------------------------------------------------------------------
+{{ 'test_component'.ljust(max_len_component) }} | {{ 'test_configuration'.ljust(max_len_config) }} | {{ 'passed'.ljust(10) }} | {{ 'failed'.ljust(10) }} | {{ 'skipped'.ljust(10) }}
+--------------------------------------------------------------------------------------------------------------
+{% for report in test_reports |sort(attribute='test_component_configuration') %}
+{{ report.test_component.ljust(max_len_component) }} | {{ report.test_configuration.ljust(max_len_config) }} | {{ report.passed.ljust(10) }} | {{ report.failed.ljust(10) }} | {{ report.skipped.ljust(10) }}
+{% endfor %}
+--------------------------------------------------------------------------------------------------------------
+
+==============================================================================================================
+Test Report (Percent of passed, failed, skipped group by test_component, test_configuration)
+==============================================================================================================
+--------------------------------------------------------------------------------------------------------------
+{{ 'test_component'.ljust(max_len_component) }} | {{ 'test_configuration'.ljust(max_len_config) }} | {{ 'passed_%'.ljust(10) }} | {{ 'failed_%'.ljust(10) }} | {{ 'skipped_%'.ljust(10) }}
+--------------------------------------------------------------------------------------------------------------
+{% for report in test_reports |sort(attribute='test_component_configuration') %}
+{{ report.test_component.ljust(max_len_component) }} | {{ report.test_configuration.ljust(max_len_config) }} | {{ report.passed_percent.ljust(10) }} | {{ report.failed_percent.ljust(10) }} | {{ report.skipped_percent.ljust(10) }}
+{% endfor %}
+--------------------------------------------------------------------------------------------------------------
+
+==============================================================================================================
+Test Report (Failed test cases group by test_component, test_configuration)
+==============================================================================================================
+--------------------------------------------------------------------------------------------------------------
+{% for report in test_reports |sort(attribute='test_component_configuration') %}
+test_component | test_configuration : {{ report.test_component }} | {{ report.test_configuration }}
+{% for testcase in report.failed_testcases %}
+    {{ testcase }}
+{% endfor %}
+{% endfor %}
+--------------------------------------------------------------------------------------------------------------
